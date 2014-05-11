@@ -1,3 +1,16 @@
+%% IMPORTANT NOTES
+%% 1
+% If $\mu$ is attenuation coefficient than integral along beams is an
+% incorrect pixel value for projection. Correct pixel value would be
+% $I=I_{0}e^{-\int \mu(l) dl}$. Even if use the linear term to approximate
+% the value of this exponent, still we will have $I_{0}(1-\int \mu(l)dl)$
+
+%% TODO
+%% 1 
+% If profiling shows it makes sense exclude beams that don't
+
+
+%%
 [ct,Te,Ve,Xray]=Driver1('materials.mat'); % question 1
 
  [ct, Te, Ve, Xray]=Driver2( ct, Te, Ve, Xray ); % question 2
