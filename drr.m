@@ -4,20 +4,11 @@ function [ oImage, oMask ] = drr( ct, Xray, iStep)
 xs=Xray.SPos(1);
 ys=Xray.SPos(2);
 zs=Xray.SPos(3);
-%% PLAN
-%% Loop over intristic coords of Xray.image
 
-% a temporary step variable to speed stuff up while debugging
-ts = 1;
-    x=Xray.gx(1:ts:end);
-    y=Xray.gy(1:ts:end);
-    z=Xray.gz(1:ts:end);
-    
-    
 %% Build a line from source to current Xray point
-    kx=x-xs;
-    ky=y-ys;
-    kz=z-zs;
+    kx=Xray.gx(:)-xs;
+    ky=Xray.gy(:)-ys;
+    kz=Xray.gz(:)-zs;
     %normalize the k vector
     kl=sqrt(kx.^2+ky.^2+kz.^2);
     kx = kx./kl;
