@@ -74,8 +74,9 @@ zs=Xray.SPos(3);
     temp.gridX=lx;
     temp.gridY=ly;
     temp.gridZ=lz;
-    [lx, ly, lz]=f_transform_my_grid(temp,inv(ct.currentTransform));
     
+    %% TODO: Apply inverse to iPar transform to lx,ly,lz
+    [lx, ly, lz]=f_transform_my_grid(temp,inv(ct.currentTransform));    
     invalid=(lx<1|lx>size(ct.gridX,1)|ly<1|ly>size(ct.gridY,2)|lz<1|lz>size(ct.gridZ,3));
     lx(invalid)=0;
     ly(invalid)=0;

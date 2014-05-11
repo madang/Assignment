@@ -18,8 +18,8 @@
  % Why not inverse transform? Double-check the wording
  
  %% question 3
-%  iPar=[0 0 0 90 0 0 ]
-%  [ oX,oY,oZ ] = rigidTrans( ct, iPar);
+ iPar=[0 0 0 90 0 0 ]
+ [ oX,oY,oZ ] = rigidTrans( ct, iPar);
 %  hold on;
 %  ts=150;
 %  plot3(oX(1:ts:end),oY(1:ts:end),oZ(1:ts:end),'.','Color','y');
