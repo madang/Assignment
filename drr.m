@@ -1,6 +1,6 @@
 function [ oImage, oMask ] = drr( ct, Xray, iStep, iPar)
-if numel(varargin)<4
-    iPar=0;
+if nargin<4
+    iPar=[0 0 0 0 0 0];
 end
 %DRR perform a cone-beam projection of ct to Xray plane form Xray.SPos
 %   Detailed explanation goes here
@@ -16,9 +16,9 @@ zs=Xray.SPos(3);
     cz= fCornersCoords(ct.gz);
     
 %% TODO:transform corners with iPar
-    temp1.gridx=cx;
-    temp1.gridy=cy;
-    temp1.gridz=cz;
+    temp1.gridX=cx;
+    temp1.gridY=cy;
+    temp1.gridZ=cz;
     [cx,cy,cz]=rigidTrans(temp1,iPar);
 %    hold on;
 %    plot3(cx,cy,cz,'ro');

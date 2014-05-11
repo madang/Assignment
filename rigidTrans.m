@@ -20,9 +20,9 @@ tMatrix(1:3,1:3)=rx*ry*rz; %for column vectors
 %% find center of ct block in world coordinates
 % QUICK AND DIRTY again - using the fact that along all dimensions the
 % number of elements is odd
-ct.center_x=ct.gridX((numel(ct.gridX)+1)/2);
-ct.center_y=ct.gridY((numel(ct.gridY)+1)/2);
-ct.center_z=ct.gridZ((numel(ct.gridZ)+1)/2);
+ct.center_x=(ct.gridX(ceil((numel(ct.gridX)+1)/2))+ct.gridX(floor((numel(ct.gridX)+1)/2)))/2;
+ct.center_y=(ct.gridY(ceil((numel(ct.gridY)+1)/2))+ct.gridY(floor((numel(ct.gridY)+1)/2)))/2;
+ct.center_z=(ct.gridZ(ceil((numel(ct.gridZ)+1)/2))+ct.gridZ(floor((numel(ct.gridZ)+1)/2)))/2;
 
 %% Shift grids to the center
 ct.gridX=ct.gridX-ct.center_x;
@@ -30,7 +30,7 @@ ct.gridY=ct.gridY-ct.center_y;
 ct.gridZ=ct.gridZ-ct.center_z;
 
 %% Apply pure rotation
-ct=f_transform_my_grid(ct,tMatrix);
+[ct.gridX,ct.gridY,ct.gridZ]=f_transform_my_grid(ct,tMatrix);
 
 %% Shift the grids back
 
