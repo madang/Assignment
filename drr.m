@@ -23,16 +23,34 @@ ts = 1;
     kx = kx./kl;
     ky = ky./kl;
     kz = kz./kl;
-    % get line points
-    t=(1:iStep:max(kl))'; %we're going to have a bunch of lines, those that are 
-    % shorter  then max(kl) are going to be extended, and later trimmed
-    % this way we can make use of matlab indexing to increase the speed
-    lx=xs+t*kx; %along columns - index of point in the same line
-    ly=ys+t*ky; % along rows - different lines
-    lz=zs+t*kz; % these are direct products
+    
 %% Find intersections of line with CT. Select an interval inside the volume
     % SKIPPING THIS FOR NOW SINCE ITERPN PROVIDES FUNCTIONALITY FOR EXTERNAL
     % POINTS
+    cx= fCornersCoords(ct.gx);
+    cy= fCornersCoords(ct.gy);
+    cz= fCornersCoords(ct.gz);
+%    hold on;
+%    plot3(cx,cy,cz,'ro');
+    cx=cx-xs;
+    cy=cy-ys;
+    cz=cz-zs;
+    
+%     plot3(cx,cy,cz,'go');
+    
+    cd=sqrt(cx.*cx+cy.*cy+cz.*cz); %corner distance (from source)
+    
+    dmin=min(cd);
+    dmax=max(cd);
+    
+%% get line points
+    t=(dmin:iStep:dmax)'; %we're going to have a bunch of lines, those that are 
+    % shorter  then max(kl) are going to be extended, and later trimmed
+    % this way we can make use of matlab indexing to increase the speed
+    lx=t*kx+xs; %along columns - index of point in the same line
+    ly=t*ky+ys; % along rows - different lines
+    lz=t*kz+zs; % these are direct products
+    
 %% Calculate the integral through interpolation
     temp.gridX=lx;
     temp.gridY=ly;
@@ -44,6 +62,7 @@ ts = 1;
     ly(invalid)=0;
     lz(invalid)=0;
     valid=not(invalid);
+    interpolated_values=zeros(size(lx));
     interpolated_values(valid)=interpn(ct.gridX,ct.gridY,ct.gridZ,single(ct.volume),lx(valid),ly(valid),lz(valid),'linear',0);
     %interpn doesn't work with uint8 so there's a need for
     %single(ct.volume)
@@ -59,3 +78,15 @@ ts = 1;
 
 end
 
+function oCoords= fCornersCoords(grid)
+    oCoords(1)=grid(1,1,1);
+    oCoords(2)=grid(1,1,end);
+    oCoords(3)=grid(1,end,1);
+    oCoords(4)=grid(1,end,end);
+    oCoords(5)=grid(end,1,1);
+    oCoords(6)=grid(end,1,end);
+    oCoords(7)=grid(end,end,1);
+    oCoords(8)=grid(end,end,end);
+end
+
+    

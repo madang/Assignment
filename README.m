@@ -17,6 +17,6 @@
 % axis image;
 
 %% question 4 - projection
-iStep=50;
+iStep=1;
 % val=interpn(ct.gridX,ct.gridY,ct.gridZ,double(ct.volume),ct.gridX./2,ct.gridY./2,ct.gridZ./2);
 [ oImage, oMask ] = drr( ct, Xray, iStep);
