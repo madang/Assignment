@@ -1,8 +1,8 @@
-function [ogX, ogY, ogZ]=f_transform_my_grid(iXray,iTransformMatrix)
+function [ogX, ogY, ogZ]=f_transform_my_grid(gx,gy,gz,iTransformMatrix)
 % If you're an iXray then I will transform YOUR grid (:
-A=iTransformMatrix*[iXray.gridX(:)';iXray.gridY(:)';iXray.gridZ(:)';ones(1,numel(iXray.gridY))]; %Not optimizing yet
+A=iTransformMatrix*[gx(:)';gy(:)';gz(:)';ones(1,numel(gy))]; %Not optimizing yet
 
-ogX=zeros(size(iXray.gridX));
+ogX=zeros(size(gx));
 ogY=ogX;
 ogZ=ogX;
 ogX(:)=A(1,:);

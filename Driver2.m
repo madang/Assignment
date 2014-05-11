@@ -15,9 +15,9 @@ function [ oct,oTe,oVe,oXray ] = Driver2( ct, Te, Ve, Xray )
 % Xray.gridY(:)=A(2,:);
 % Xray.gridZ(:)=A(3,:);
 
-[Xray.gx,Xray.gy,Xray.gz]=f_transform_my_grid(Xray,Xray.TPos);
+[Xray.gx,Xray.gy,Xray.gz]=f_transform_my_grid(Xray.gridX,Xray.gridY,Xray.gridZ,Xray.TPos);
 Xray.currentTransform=Xray.TPos;
-[ct.gx,ct.gy,ct.gz]=f_transform_my_grid(ct,ct.TPos);
+[ct.gx,ct.gy,ct.gz]=f_transform_my_grid(ct.gridX,ct.gridY,ct.gridZ,ct.TPos);
 ct.currentTransform=ct.TPos;
 
 %% Show the transformed 3D and 2D sampling grids and the position of the X-ray source Xray.SPos by using the function plot3().

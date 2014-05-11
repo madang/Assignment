@@ -14,11 +14,11 @@ zs=Xray.SPos(3);
     cx= fCornersCoords(ct.gx);
     cy= fCornersCoords(ct.gy);
     cz= fCornersCoords(ct.gz);
-    
+    originalCenter=[mean(cx);mean(cy);mean(cz)];
 %% TODO:transform corners with iPar
-    temp1.gridX=cx;
-    temp1.gridY=cy;
-    temp1.gridZ=cz;
+    temp1.gx=cx;
+    temp1.gy=cy;
+    temp1.gz=cz;
     [cx,cy,cz]=rigidTrans(temp1,iPar);
 %    hold on;
 %    plot3(cx,cy,cz,'ro');
@@ -76,7 +76,16 @@ zs=Xray.SPos(3);
     temp.gridZ=lz;
     
     %% TODO: Apply inverse to iPar transform to lx,ly,lz
-    [lx, ly, lz]=f_transform_my_grid(temp,inv(ct.currentTransform));    
+    % inverse means inverse translation followed by inverse rotation around
+    % center of ct.volume
+    
+    tMatrix=IntristicRotationAndTranslationMatrix(iPar,originalCenter);
+    
+    
+    % center of ct volume
+    
+    
+    [lx, ly, lz]=f_transform_my_grid(lx,ly,lz,inv(tMatrix*ct.currentTransform));    
     invalid=(lx<1|lx>size(ct.gridX,1)|ly<1|ly>size(ct.gridY,2)|lz<1|lz>size(ct.gridZ,3));
     lx(invalid)=0;
     ly(invalid)=0;
