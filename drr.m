@@ -1,17 +1,25 @@
-function [ oImage, oMask ] = drr( ct, Xray, iStep)
+function [ oImage, oMask ] = drr( ct, Xray, iStep, iPar)
+if numel(varargin)<4
+    iPar=0;
+end
 %DRR perform a cone-beam projection of ct to Xray plane form Xray.SPos
 %   Detailed explanation goes here
 xs=Xray.SPos(1);
 ys=Xray.SPos(2);
 zs=Xray.SPos(3);
 
-  
 %% Find intersections of line with CT. Select an interval inside the volume
     % SKIPPING THIS FOR NOW SINCE ITERPN PROVIDES FUNCTIONALITY FOR EXTERNAL
     % POINTS
     cx= fCornersCoords(ct.gx);
     cy= fCornersCoords(ct.gy);
     cz= fCornersCoords(ct.gz);
+    
+%% TODO:transform corners with iPar
+    temp1.gridx=cx;
+    temp1.gridy=cy;
+    temp1.gridz=cz;
+    [cx,cy,cz]=rigidTrans(temp1,iPar);
 %    hold on;
 %    plot3(cx,cy,cz,'ro');
     cx=cx-xs;
@@ -53,8 +61,6 @@ zs=Xray.SPos(3);
     kx = kx./kl;
     ky = ky./kl;
     kz = kz./kl;
-    
-
     
 %% get line points
     t=(dmin:iStep:dmax)'; %we're going to have a bunch of lines, those that are 
