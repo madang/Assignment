@@ -8,10 +8,10 @@ zs=Xray.SPos(3);
 %% Loop over intristic coords of Xray.image
 
 % a temporary step variable to speed stuff up while debugging
-ts = 50;
-    x=Xray.gridX(1:ts:end);
-    y=Xray.gridY(1:ts:end);
-    z=Xray.gridZ(1:ts:end);
+ts = 1;
+    x=Xray.gx(1:ts:end);
+    y=Xray.gy(1:ts:end);
+    z=Xray.gz(1:ts:end);
     
     
 %% Build a line from source to current Xray point
@@ -24,7 +24,7 @@ ts = 50;
     ky = ky./kl;
     kz = kz./kl;
     % get line points
-    t=(1:max(kl))'; %we're going to have a bunch of lines, those that are 
+    t=(1:iStep:max(kl))'; %we're going to have a bunch of lines, those that are 
     % shorter  then max(kl) are going to be extended, and later trimmed
     % this way we can make use of matlab indexing to increase the speed
     lx=xs+t*kx; %along columns - index of point in the same line
@@ -34,10 +34,22 @@ ts = 50;
     % SKIPPING THIS FOR NOW SINCE ITERPN PROVIDES FUNCTIONALITY FOR EXTERNAL
     % POINTS
 %% Calculate the integral through interpolation
-    interpolated_values =interpn(ct.gridX,ct.gridY,ct.gridZ,ct.volume,lx,ly,lz);
+    temp.gridX=lx;
+    temp.gridY=ly;
+    temp.gridZ=lz;
+    [lx, ly, lz]=f_transform_my_grid(temp,inv(ct.currentTransform));
+    
+    invalid=(lx<1|lx>size(ct.gridX,1)|ly<1|ly>size(ct.gridY,2)|lz<1|lz>size(ct.gridZ,3));
+    lx(invalid)=0;
+    ly(invalid)=0;
+    lz(invalid)=0;
+    valid=not(invalid);
+    interpolated_values(valid)=interpn(ct.gridX,ct.gridY,ct.gridZ,single(ct.volume),lx(valid),ly(valid),lz(valid),'linear',0);
+    %interpn doesn't work with uint8 so there's a need for
+    %single(ct.volume)
     drr_pixel_values=sum(interpolated_values); %summation along columns (dim1)
     % this is  a row vector , to get an image we need to reshape it.
-    oImage=reshape(drr_pixel_values,size(XRay.image));
+    oImage=reshape(drr_pixel_values,size(Xray.image));
    
 %% return oMask as well
     oMask=zeros(size(oImage));
