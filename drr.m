@@ -100,8 +100,8 @@ yrange=floor(min(ipy)):ceil(max(ipy));
     lz=t*kz+zs; % these are direct products
     
     
-    hold on;
-plot3(lx(1:200:end),ly(1:200:end),lz(1:200:end),'mo');
+%     hold on;
+% plot3(lx(1:200:end),ly(1:200:end),lz(1:200:end),'mo');
 %% Calculate the integral through interpolation
 
     %% Apply inverse to iPar transform to lx,ly,lz

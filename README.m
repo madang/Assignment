@@ -52,6 +52,18 @@ figure; imagesc(oImage);
 % % tic;teset1=CorrCoef(oImage,Xray.image);toc; % My funcion
 % teset2=corrcoef(oImage,Xray.image); % Built-in
 % cc=teset2(2);
-VariationPlot(ct,Xray,-20:2:20,1);
-
+VariationPlotCC(ct,Xray,-20:2:20,1,'tx');
+VariationPlotCC(ct,Xray,-20:2:20,2,'ty');
+VariationPlotCC(ct,Xray,-20:2:20,3,'tz');
+VariationPlotCC(ct,Xray,-10:1:10,4,'alpha)');
+VariationPlotCC(ct,Xray,-10:1:10,5,'beta');
+VariationPlotCC(ct,Xray,-10:1:10,6,'gamma)');
 %% 8 MI
+VariationPlotMI(ct,Xray,-20:2:20,1,'tx');
+VariationPlotMI(ct,Xray,-20:2:20,2,'ty');
+VariationPlotMI(ct,Xray,-20:2:20,3,'tz');
+VariationPlotMI(ct,Xray,-10:1:10,4,'alpha');
+VariationPlotMI(ct,Xray,-10:1:10,5,'beta)');
+VariationPlotMI(ct,Xray,-10:1:10,6,'gamma)');
+
+%% 9 
