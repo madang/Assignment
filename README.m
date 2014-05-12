@@ -49,21 +49,32 @@ figure; imagesc(oImage);
 
 
 %% 7 CC
-% % tic;teset1=CorrCoef(oImage,Xray.image);toc; % My funcion
+% % tic;teset1=CorrCoef(oImage,Xray.image);toc; % My funcion from labs
 % teset2=corrcoef(oImage,Xray.image); % Built-in
 % cc=teset2(2);
-VariationPlotCC(ct,Xray,-20:2:20,1,'tx');
-VariationPlotCC(ct,Xray,-20:2:20,2,'ty');
-VariationPlotCC(ct,Xray,-20:2:20,3,'tz');
-VariationPlotCC(ct,Xray,-10:1:10,4,'alpha)');
-VariationPlotCC(ct,Xray,-10:1:10,5,'beta');
-VariationPlotCC(ct,Xray,-10:1:10,6,'gamma)');
-%% 8 MI
-VariationPlotMI(ct,Xray,-20:2:20,1,'tx');
-VariationPlotMI(ct,Xray,-20:2:20,2,'ty');
-VariationPlotMI(ct,Xray,-20:2:20,3,'tz');
-VariationPlotMI(ct,Xray,-10:1:10,4,'alpha');
-VariationPlotMI(ct,Xray,-10:1:10,5,'beta)');
-VariationPlotMI(ct,Xray,-10:1:10,6,'gamma)');
 
-%% 9 
+% VariationPlotCC(ct,Xray,-20:2:20,1,'tx');
+% VariationPlotCC(ct,Xray,-20:2:20,2,'ty');
+% VariationPlotCC(ct,Xray,-20:2:20,3,'tz');
+% VariationPlotCC(ct,Xray,-10:1:10,4,'alpha)');
+% VariationPlotCC(ct,Xray,-10:1:10,5,'beta');
+% VariationPlotCC(ct,Xray,-10:1:10,6,'gamma)');
+%% 8 MI
+% VariationPlotMI(ct,Xray,-20:2:20,1,'tx');
+% VariationPlotMI(ct,Xray,-20:2:20,2,'ty');
+% VariationPlotMI(ct,Xray,-20:2:20,3,'tz');
+% VariationPlotMI(ct,Xray,-10:1:10,4,'alpha');
+% VariationPlotMI(ct,Xray,-10:1:10,5,'beta');
+% VariationPlotMI(ct,Xray,-10:1:10,6,'gamma');
+
+%% 9 Optimize
+
+% definition of similarity measure SM(p)
+oSM = @(iPar) criterionFcn( iPar, 'cc', ct, Xray );
+% parameters of the simplex optimization
+opts = optimset('Display','iter',...
+'NumIter',50,...
+'TolX',1e-3,...
+'TolFcn',1e-3 );
+% start simplex optimization
+iPar_opt = fminsearch( oSM, 1e-2*ones(6,1), opts )
