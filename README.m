@@ -82,3 +82,5 @@ opts = optimset('Display','iter',...
 %% look at the pict
 oImage=drr( ct, Xray, iStep,iPar_opt);
 imshowpair(oImage,Xray.image);
+
+%% On first optimization saved whole workspace to OPTCC1.mat
