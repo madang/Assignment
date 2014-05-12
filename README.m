@@ -26,6 +26,7 @@
 
 plot3(oX(1),oY(1),oZ(1),'o','Color','k');
 
+
 plot3(ct.gx(1),ct.gy(1),ct.gz(1),'o','Color','k');
 axis image;
 
@@ -46,3 +47,11 @@ figure; imagesc(oImage);
 
 %% TODO: prepare hostograms
 
+
+%% 7 CC
+% % tic;teset1=CorrCoef(oImage,Xray.image);toc; % My funcion
+% teset2=corrcoef(oImage,Xray.image); % Built-in
+% cc=teset2(2);
+VariationPlot(ct,Xray,-20:2:20,1);
+
+%% 8 MI
