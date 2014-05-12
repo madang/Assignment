@@ -5,15 +5,18 @@ function oSM = criterionFcn( iPar, iType, ct, Xray )
 iStep=1;
 % End bugplace
 switch iType
-    case cc
-        tcc=corrcoeff(drr( ct, Xray, iStep, iPar),Xray.image);
+    case 'cc'
+        tcc=corrcoef(drr( ct, Xray, iStep, iPar),Xray.image);
         oSM=tcc(2);
-    case mi
+    case 'mi'
         oSM=MutualInformation(drr( ct, Xray, iStep, iPar),Xray.image);
     otherwise
         error(strcat('criterionFcn:: unknown iType:',iType));
 end
-      
+      oImage=drr( ct, Xray, iStep, iPar);
+      imshowpair(oImage,Xray.image);
+      xlabel(num2str(iPar));
+      drawnow expose;
 
 
 end

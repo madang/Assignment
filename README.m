@@ -12,7 +12,7 @@
 
 %%
 [ct,Te,Ve,Xray]=Driver1('materials.mat'); % question 1
-
+Xray.image=Xray.windowed;
  [ct, Te, Ve, Xray]=Driver2( ct, Te, Ve, Xray ); % question 2
  %% I have a question re question2
  % Why not inverse transform? Double-check the wording
@@ -73,8 +73,12 @@ figure; imagesc(oImage);
 oSM = @(iPar) criterionFcn( iPar, 'cc', ct, Xray );
 % parameters of the simplex optimization
 opts = optimset('Display','iter',...
-'NumIter',50,...
-'TolX',1e-3,...
-'TolFcn',1e-3 );
+'MaxIter',100,...
+'TolX',1e-4,...
+'TolFun',1e-3 );
 % start simplex optimization
-iPar_opt = fminsearch( oSM, 1e-2*ones(6,1), opts )
+[iPar_opt,oSM_opt,flag,grad,hessian] = fminunc( oSM, 1e-2*ones(6,1), opts )
+
+%% look at the pict
+oImage=drr( ct, Xray, iStep,iPar_opt);
+imshowpair(oImage,Xray.image);
