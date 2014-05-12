@@ -9,13 +9,13 @@ switch iType
         tcc=corrcoef(drr( ct, Xray, iStep, iPar),Xray.image);
         oSM=tcc(2);
     case 'mi'
-        oSM=MutualInformation(drr( ct, Xray, iStep, iPar),Xray.image);
+        oSM=-MutualInformation(drr( ct, Xray, iStep, iPar),Xray.image);
     otherwise
         error(strcat('criterionFcn:: unknown iType:',iType));
 end
       oImage=drr( ct, Xray, iStep, iPar);
       imshowpair(oImage,Xray.image);
-      xlabel(num2str(iPar));
+      ylabel(num2str(iPar));
       drawnow expose;
 
 

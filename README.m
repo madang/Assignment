@@ -76,7 +76,7 @@ opts = optimset('Display','iter',...
 'MaxIter',100,...
 'TolX',1e-4,...
 'TolFun',1e-3 );
-% start simplex optimization
+
 [iPar_opt,oSM_opt,flag,grad,hessian] = fminunc( oSM, 1e-2*ones(6,1), opts )
 
 %% look at the pict
@@ -84,3 +84,18 @@ oImage=drr( ct, Xray, iStep,iPar_opt);
 imshowpair(oImage,Xray.image);
 
 %% On first optimization saved whole workspace to OPTCC1.mat
+
+%% 9.2 Optimize MI
+% definition of similarity measure SM(p)
+oSM = @(iPar) criterionFcn( iPar, 'mi', ct, Xray );
+% parameters of the simplex optimization
+opts = optimset('Display','iter',...
+'MaxIter',100,...
+'TolX',1e-4,...
+'TolFun',1e-4 );
+
+[iPar_opt,oSM_opt,flag,smth] = fminunc( oSM, 1e-2*ones(6,1), opts );
+
+%% look at the pict
+oImage=drr( ct, Xray, iStep,iPar_opt);
+imshowpair(oImage,Xray.image);

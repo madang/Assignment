@@ -13,6 +13,13 @@ function oMI = MutualInformation(a,b)
 %     a = double(uint8(a)); % I need to have doubles so that max works on complex numbers
 %     b = double(uint8(b)); % But I need those boubles to have only 256 different values
 % end
+%% For the hack in the Mutual histogram section to work we need "8bit" images
+if any(a(:)>255)
+    a = a*255/max(a(:));
+end
+if any(b(:)>255)
+    b = b*255/max(b(:));
+end
 %% Mutual histogram
 % This is a hack to speed things up a little bit
 c=sort(a(:)*256+b(:)); % make a matrix where each unique combination of a and b values yields a unique value
@@ -20,7 +27,7 @@ counter=histc(c,0:65535);
 counter(counter==0)=[];
 counter=counter./numel(a);
 HAB=-sum(counter.*log2(counter)); % using bit as a unit of entropy
-    
+
 counter=histc(a,0:255);
 counter(counter==0)=[];
 counter=counter./numel(a);
