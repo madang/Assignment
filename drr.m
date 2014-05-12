@@ -19,48 +19,73 @@ zs=Xray.SPos(3);
     cy= fCornersCoords(ct.gy);
     cz= fCornersCoords(ct.gz);
     originalCenter=[mean(cx);mean(cy);mean(cz)];
-%% TODO:transform corners with iPar
+%% Done:transform corners with iPar
     temp1.gx=cx;
     temp1.gy=cy;
     temp1.gz=cz;
     [cx,cy,cz]=rigidTrans(temp1,iPar);
 %    hold on;
 %    plot3(cx,cy,cz,'ro');
-    cx=cx-xs;
-    cy=cy-ys;
-    cz=cz-zs;
+    dx=cx-xs;
+    dy=cy-ys;
+    dz=cz-zs;
     
 %     plot3(cx,cy,cz,'go');
     
-    cd=sqrt(cx.*cx+cy.*cy+cz.*cz); %corner distance (from source)
+    cd=sqrt(dx.*dx+dy.*dy+dz.*dz); %corner distance (from source)
     
     dmin=min(cd);
     dmax=max(cd);
     
 %% Get coordinates of projection of ct.volume corners onto XRay plane
-% % Yes this is a premature optimization and I will burn in hell for this but
-% % I'll do this while it's still fun
-% %
-% % Used a plane intersection tutorial from here:
-% % http://www2.math.umd.edu/~jmr/241/lines_planes.html
-% 
-% % Get points in the Xray plane
-%   P1=[Xray.gx(1,1),Xray.gy(1,1),Xray.gz(1,1)];
-%   P2=[Xray.gx(1,end),Xray.gy(1,end),Xray.gz(1,end)];
-%   P3=[Xray.gx(end,end),Xray.gy(end,end),Xray.gz(end,end)];
-% % Get a normal to the Cray plane
-%   normal = cross(P1-P2, P1-P3);
-%   
-% % Get plane equation with symbolic vars
-% syms x y z;
-% P = [x,y,z];
-% planefunction = dot(normal, P-P1);
-    
+% Yes this is a premature optimization and I will burn in hell for this but
+% I'll do this while it's still fun
+%
+% Used a plane intersection tutorial from here:
+% http://www2.math.umd.edu/~jmr/241/lines_planes.html
+
+% Get points in the Xray plane
+  P1=[Xray.gx(1,1),Xray.gy(1,1),Xray.gz(1,1)];
+  P2=[Xray.gx(1,end),Xray.gy(1,end),Xray.gz(1,end)];
+  P3=[Xray.gx(end,end),Xray.gy(end,end),Xray.gz(end,end)];
+% Get a normal to the Cray plane
+  normal = cross(P1-P2, P1-P3);
+  
+% Get plane equation with symbolic vars
+syms x y z;
+P = [x,y,z];
+planefunction = dot(normal, P-P1);
+
+% Get poins for lines
+syms t; %parameter for line
+points=[cx',cy',cz'];
+src=repmat(Xray.SPos,8,1);
+lines=src+t*(points-src);
+IntersectionPoints=zeros(8,3);
+for ind =1:8
+    newfunction = subs(planefunction, P, lines(ind,:));
+    t0(ind) = solve(newfunction);
+    IntersectionPoints(ind,:) = subs(lines(ind,:), t, t0(ind));
+%     ezplot3(lines(1,1),lines(1,2),lines(1,3),[0,t0]);
+end
+
+%get intersection points inintristic coordiantes of Xray.image
+
+[ipx,ipy,ipz]=f_transform_my_grid(IntersectionPoints(:,1),...
+    IntersectionPoints(:,2),IntersectionPoints(:,3),inv(Xray.TPos));
+
+%% TODO: Write a checkup here to see is all corners fit int image
+xrange=floor(min(ipx)):ceil(max(ipx));
+yrange=floor(min(ipy)):ceil(max(ipy));
+% build a range of points in Cray,image that are good
+% current implementation also inludes some bg pixels
+
 %% Build a line from source to current Xray point
-    kx=Xray.gx(:)-xs;
-    ky=Xray.gy(:)-ys;
-    kz=Xray.gz(:)-zs;
+    kx=Xray.gx(xrange,yrange)-xs;
+    ky=Xray.gy(xrange,yrange)-ys;
+    kz=Xray.gz(xrange,yrange)-zs;
     %normalize the k vector
+    kx=kx(:)'; ky=ky(:)'; kz=kz(:)';
     kl=sqrt(kx.^2+ky.^2+kz.^2);
     kx = kx./kl;
     ky = ky./kl;
@@ -70,16 +95,16 @@ zs=Xray.SPos(3);
     t=(dmin:iStep:dmax)'; %we're going to have a bunch of lines, those that are 
     % shorter  then max(kl) are going to be extended, and later trimmed
     % this way we can make use of matlab indexing to increase the speed
-    lx=t*kx'+xs; %along columns - index of point in the same line
-    ly=t*ky'+ys; % along rows - different lines
-    lz=t*kz'+zs; % these are direct products
+    lx=t*kx+xs; %along columns - index of point in the same line
+    ly=t*ky+ys; % along rows - different lines
+    lz=t*kz+zs; % these are direct products
     
+    
+    hold on;
+plot3(lx(1:200:end),ly(1:200:end),lz(1:200:end),'mo');
 %% Calculate the integral through interpolation
-    temp.gridX=lx;
-    temp.gridY=ly;
-    temp.gridZ=lz;
-    
-    %% TODO: Apply inverse to iPar transform to lx,ly,lz
+
+    %% Apply inverse to iPar transform to lx,ly,lz
     % inverse means inverse translation followed by inverse rotation around
     % center of ct.volume
     
@@ -103,7 +128,9 @@ zs=Xray.SPos(3);
     %single(ct.volume)
     drr_pixel_values=sum(interpolated_values); %summation along columns (dim1)
     % this is  a row vector , to get an image we need to reshape it.
-    oImage=reshape(drr_pixel_values,size(Xray.image));
+    oImage=zeros(size(Xray.image));
+    oImage(xrange,yrange)=reshape(drr_pixel_values,[numel(xrange),numel(yrange)]);
+%     oImage=reshape(drr_pixel_values,size(Xray.image));
    
 %% return oMask as well
     oMask=zeros(size(oImage));

@@ -18,7 +18,7 @@
  % Why not inverse transform? Double-check the wording
  
  %% question 3
-  iPar=[0 0 0 0 90 0 ];
+  iPar=[0 0 0 90 0 0 ];
  [ oX,oY,oZ ] = rigidTrans( ct, iPar);
  hold on;
  ts=150;
