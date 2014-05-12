@@ -34,3 +34,15 @@ iStep=1;
 % val=interpn(ct.gridX,ct.gridY,ct.gridZ,double(ct.volume),ct.gridX./2,ct.gridY./2,ct.gridZ./2);
 [ oImage, oMask ] = drr( ct, Xray, iStep, iPar);
 figure; imagesc(oImage);
+
+
+%% question 6
+%  By looking at the histogram of ct.volume one can see that background intensity is
+%  64 (mode) the width o the peak is around 2. If we threshold ct.volume by
+%  66 we will esentially  get rid of background.
+%
+%   Going to hardcode 66 into drr.
+%% TODO: fix hardcoded threshold in drr
+
+%% TODO: prepare hostograms
+

@@ -1,6 +1,10 @@
-function [ oImage, oMask ] = drr( ct, Xray, iStep, iPar)
+function [ oImage, oMask ] = drr( ct, Xray, iStep, iPar, iThreshold)
 if nargin<4
     iPar=[0 0 0 0 0 0];
+end
+
+if nargin<5
+    iThreshold=66;
 end
 %DRR perform a cone-beam projection of ct to Xray plane form Xray.SPos
 %   Detailed explanation goes here
@@ -92,7 +96,9 @@ zs=Xray.SPos(3);
     lz(invalid)=0;
     valid=not(invalid);
     interpolated_values=zeros(size(lx));
-    interpolated_values(valid)=interpn(ct.gridX,ct.gridY,ct.gridZ,single(ct.volume),lx(valid),ly(valid),lz(valid),'linear',0);
+    v=single(ct.volume);
+    v(v<=iThreshold)=0;
+    interpolated_values(valid)=interpn(ct.gridX,ct.gridY,ct.gridZ,v,lx(valid),ly(valid),lz(valid),'linear',0);
     %interpn doesn't work with uint8 so there's a need for
     %single(ct.volume)
     drr_pixel_values=sum(interpolated_values); %summation along columns (dim1)
