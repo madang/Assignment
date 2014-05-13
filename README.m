@@ -100,7 +100,7 @@ imshowpair(oImage,Xray.image);
 
 
 %% CC and fminunc 
-t_pert=10*rand(1,6)
+t_pert=20*(rand(1,6)-1)*2;
 oSM = @(iPar) criterionFcn( iPar, 'cc', ct, Xray );
 % parameters of the simplex optimization
 opts = optimset('Display','iter-detailed',...

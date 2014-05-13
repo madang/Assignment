@@ -166,6 +166,10 @@ It converges to [-0.7545  -13.8155   -6.7758    0.0024   -0.2383   -2.2834]
 *Perturbing from this point with amplitude 10
 Initial parameter value [8.8172   -8.9618    1.2270    1.4212    3.9793    6.8739]
 Running fminunc
+Converged to [ 7.4135  -15.7927   -0.7272    0.9084    4.9567    5.8728]
+CC=-0.581064;
+
+*Perturbing with amplitude 20
 
 
 CC=-0.752567
