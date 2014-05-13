@@ -215,3 +215,7 @@ pip-log.txt
 .mr.developer.cfg
 *.asv
 *.eps
+*.mat
+*.eps
+*.eps
+*.png

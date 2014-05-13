@@ -129,12 +129,12 @@ yrange=floor(min(ipy)):ceil(max(ipy));
     drr_pixel_values=sum(interpolated_values); %summation along columns (dim1)
     % this is  a row vector , to get an image we need to reshape it.
     oImage=zeros(size(Xray.image));
-    oImage(xrange,yrange)=reshape(drr_pixel_values,[numel(xrange),numel(yrange)]);
+    oImage(xrange,yrange)=reshape(drr_pixel_values,[numel(xrange),numel(yrange)])/(0.1*iStep);
 %     oImage=reshape(drr_pixel_values,size(Xray.image));
    
 %% return oMask as well
     oMask=zeros(size(oImage));
-    oMask(oImage~=0)=1;
+    oMask(xrange,yrange)=reshape(sum(valid)>0,[numel(xrange),numel(yrange)]);
 %%
 
 

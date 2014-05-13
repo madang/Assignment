@@ -1,0 +1,131 @@
+*Title
+Registration of 3D and 2D images
+*Subtitle
+a report
+*Authors
+Hennadii Madan
+*Affiliation 1 line
+Department of General Physiology of Nervous System
+*Affiliation 2 line
+Bogomoletz Institute of Physiology
+*Affiliation
+Kiev Ukraine
+*email
+madanh2014@gmail.com
+
+*Abstract
+Abstract -- This is a report for the 2014 test assignment for junior researcher position candidates in the Laboratory of Imaging Technologies, Faculty of Electrical Engineering, University of Ljubljana. The assignment involves registration of a 3D CT data of a single vertebra to an X-ray image of a spine phantom through optimization of a similarity measure between a cone beam projection of the CT volume to the image plane and the X-ray image itself. A Report consist of the answers to the ten questions posed in the assignment.
+
+*Heading 1
+Introduction
+*Body text
+In the Laboratory of Imaging Technologies, Faculty of Electrical Engineering, University of Ljubljana each candidate for the junior researcher position is required to perform a test assignment to evaluate his fitness to this position. 
+
+Assignment requires the candidate to perform a 3D-2D registration of a CT scan of a vertebra to an X-ray image of a spine segment. It includes 10 tasks to prepare a report on. The assignment comes in a form of a .pdf file with task description supplemented by a .mat file containing the data to be processed. The .mat file contains two structures named ct and Xray representing a 3D CT image of lumbar vertebra L3 and a 2D X-ray image of the lumbar vertebrae L1–L5. The structures contain fields ct.TPos and Xray.TPos that are matrices of the geometric transformations of the coordinate systems of 3D and 2D images from the reference coordinate system to the first image element indexed by (1,1). Xray.SPos is the position of the X-ray source in the reference coordinate system. The spatial sampling of the 3D and 2D images is 1 milimeter isotropic.
+
+*Heading 1
+Improving contrast of X-ray image
+*Body text
+By looking at the scaled X-ray image one can see that vertebrae fit in a  rectangular region with top-left corer at 100,170 width 260 and height 120 (Fig.1,A). Histogram of the image pixels that fall within the rectangle (Fig.1, B) suggests that all relevant structures have intensities within 20:160 range. A windowing with central intensity of 90 and width 140 is performed (Fig 1., C).
+
+*Figure
+A=<Xray_image_pink_rectangle.eps>
+B=<hist_relevant.eps>
+C=<windowed.eps>
+Fig.1. Windowing of the initial X-ray image.
+
+
+*Heading 1
+Verifying the geometric setup
+*Body text
+Samplimg grids for Xray.image and ct.volume are created and stored in gridX, gridY and gridZ fields of both Xray and ct structures. These grids are then transformed using TPos field and saved as gx, gy and gz fields. Fig. 2 displays an image showing position of X-ray and CT volume and source for the projection in world coordinates.
+
+*Figure
+<README_04.png>
+Fig.2. Positions of CT volume, X-ray image and X-ray source in world coordinates.
+
+
+*Heading 1
+Rigid transformation
+*Body text
+Multiple conventions about the rotation sequence and whether those rotation are intrinsic or extrinsic are in use. Here a rotation around world z axis is first applied , then it is followed by rotation around world y axis and then around world x axis. These rotation are performed with respect to the center of the CT volume. That is before rotations are performed a translation that moves origin to the center of the CT volume is made and after rotations an inverse translation is carried out.
+With these conventions parameters [0 0 0 90 0 0]  would yield a right-angle rotation around z axis.
+Results of rigid transformation of the CT grid with parameters [0 0 0 90 0 0] are shown in Fig. 3.
+
+
+*Figure
+<question4.eps>
+Fig.3. Positions of CT volume, X-ray image and X-ray source in world coordinates.
+
+*Heading 1
+Cone beam projection
+*Body text
+Digitally reconstructed radiographs (DRR) of CT 3D image may be used to perform 3D-2D registration. These are made using cone beam projection.
+According to the assignment intensity of each voxel in the CT 3D image represents the
+atenuation coefficient µ(x) of the corresponding structure. A formula
+<EQ1>
+is proposed for the cone beam projection. This formula is not entirely correct from the point of view of physics. A more correct (yet still neglecting different distance of Xray pixels to the source) formula  would be
+<EQ2>,
+where I0 is the intensity of the source. For given setup this should be set to 255.
+Anyway a function *drr.m* that performs cone beam projection using formula <EQ1> has been written. 
+In this function beam sampling is done through interpolation of CT 3D image. Therefore it makes no sense to have beam sampling denser than CT 3D image grid. Decreasing beam sampling interval will lead to information loss. Therefore a reasonable beam sampling interval would be around 1 millimeter (Fig.4).
+
+*Figure
+<question4.eps>
+Fig.4. A cone beam projection DRR of the given CT 3D image into the X-ray image plane.
+
+
+*Heading 1
+DRRs of rigid body transformed CT 3D image
+*Body text
+Function *drr.m* has been extended to perform a projection of CT 3D volume after an arbitrary rigid body transformation. DRRs obtained with various transform parameters can be seen in Fig.5
+
+*Figure
+<question5.eps>
+Fig.5. A cone beam projection DRR of the given CT 3D image into the X-ray image plane.
+
+*Heading 1
+Discarding anatomically irrelevant information
+*Body text
+Using a histogram of the CT 3D image (Fig.6,A) one can see a peak at value 64 around 2 wide, that corresponds to the background. By thresholding this image at value 66 before performing the projection one effectively removes most if not all non-vertebra data from integration (see Fig.6,B).
+
+*Figure
+<question6.eps>
+Fig.6. A- Histogram of CT 3D image. B - a DRR of thresholded CT 3D image.
+
+*Heading 1
+Correlation coefficient
+*Body text
+One of the similarity measures to be used is correlation coefficient given by equation.
+<Eq3>
+If we have images in the same modality, pixel values corresponding to the same structure would produce terms of the same sign in the nominator in <Equation 3> . Therefore correlation coefficient would have positive value. The better the pictures are aligned the closer it would be to 1. Conversely if we have different modalities so that the same structure would give pixel values above mean picture intensity in one image and below mean picture intensity in another one then we would have negative nominator. The better the structures would be aligned the smaller (more negative)the correlation coefficient would be. Theoretically it could reach -1 for a perfectly aligned negative of the very same picture. These pictures would be anti-correlated. In our case we have anti-correlated images and  therefore we strive to minimize the correlation coefficient.
+Values of correlation coefficient between  given DRR of CT 3D image and X-ray when  one of the rigid body parameter varies are shown in Fig. 7
+
+*Figure
+<cc_var_tx.eps>
+<cc_var_ty.eps>
+<cc_var_tz.eps>
+<cc_var_alpha.eps>
+<cc_var_beta.eps>
+<cc_var_gamma.eps>
+Fig.7. Dependencies of correlation coefficient between given DRR of CT 3D and X-ray images depending on variation of rigid body transform parameters.
+
+
+*Heading 1
+Mutual information
+*Body text
+Another similarity measure to be used in this assignment is mutual information given by equation
+<Eq4>.
+Regardless of modality the joint distribution histogram gives us the number of all states both pixels at given position can have. Obviously for perfectly aligned pictures the joint probability histogram would have the same amount of different states and same amount of pixels in each state as each individual picture. Therefore according to <Eq4> mutual information of perfectly aligned pictures would be equal to the entropy of an individual picture.
+Any misalignment would increase the amount of states in the joint distribution and therefore increase joint entropy decreasing mutual information.
+
+Values of mutual information for  given DRR of CT 3D image and X-ray when  one of the rigid body parameter varies are shown in Fig. 8
+
+*Figure
+<mi_var_tx.eps>
+<mi_var_ty.eps>
+<mi_var_tz.eps>
+<mi_var_alpha.eps>
+<mi_var_beta.eps>
+<mi_var_gamma.eps>
+Fig.7. Dependencies of mutual information forn given DRR of CT 3D and X-ray images depending on variation of rigid body transform parameters.

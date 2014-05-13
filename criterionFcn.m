@@ -13,10 +13,11 @@ switch iType
     otherwise
         error(strcat('criterionFcn:: unknown iType:',iType));
 end
-      oImage=drr( ct, Xray, iStep, iPar);
-      imshowpair(oImage,Xray.image);
-      ylabel(num2str(iPar));
-      drawnow expose;
+%       oImage=drr( ct, Xray, iStep, iPar);
+%       imshowpair(oImage,Xray.image);
+%       ylabel(num2str(iPar));
+%       xlabel(num2str(oSM));
+%       drawnow expose;
 
 
 end

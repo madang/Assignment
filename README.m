@@ -12,29 +12,44 @@
 
 %%
 [ct,Te,Ve,Xray]=Driver1('materials.mat'); % question 1
+Xray.original=Xray.image;
 Xray.image=Xray.windowed;
- [ct, Te, Ve, Xray]=Driver2( ct, Te, Ve, Xray ); % question 2
- %% I have a question re question2
- % Why not inverse transform? Double-check the wording
- 
+[ct, Te, Ve, Xray]=Driver2( ct, Te, Ve, Xray ); % question 2
+
  %% question 3
   iPar=[0 0 0 90 0 0 ];
  [ oX,oY,oZ ] = rigidTrans( ct, iPar);
- hold on;
- ts=150;
+ hold off;
+ figure;
+ ts=1;% spacing to speed up plots interaction
+plot3(Xray.gx(1:ts:end),Xray.gy(1:ts:end),Xray.gz(1:ts:end),'.','Color','b');
+grid on;
+hold on;
+% Yellow for ct
  plot3(oX(1:ts:end),oY(1:ts:end),oZ(1:ts:end),'.','Color','y');
+ 
+ % Magenta for source
+ plot3(Xray.SPos(1),Xray.SPos(2),Xray.SPos(3),'.','Color','m')
 
-plot3(oX(1),oY(1),oZ(1),'o','Color','k');
+
+ set(gca,'FontName','Times New Roman','FontSize',10);
+% saveas(gcf,'question4','eps');
+% plot3(oX(1),oY(1),oZ(1),'o','Color','k');
+% 
+% 
+% plot3(ct.gx(1),ct.gy(1),ct.gz(1),'o','Color','k');
 
 
-plot3(ct.gx(1),ct.gy(1),ct.gz(1),'o','Color','k');
-axis image;
+% axis image;
 
 %% question 4 - projection
-iStep=1;
+iPar=[0 0 0 0 0 0];
+iStep=0.5;
 % val=interpn(ct.gridX,ct.gridY,ct.gridZ,double(ct.volume),ct.gridX./2,ct.gridY./2,ct.gridZ./2);
 [ oImage, oMask ] = drr( ct, Xray, iStep, iPar);
-figure; imagesc(oImage);
+%%
+oImage=oImage*255/max(oImage(:));
+figure; image(oImage); colormap(gray(256));
 
 
 %% question 6
@@ -45,7 +60,7 @@ figure; imagesc(oImage);
 %   Going to hardcode 66 into drr.
 %% TODO: fix hardcoded threshold in drr
 
-%% TODO: prepare hostograms
+%% TODO: prepare histograms
 
 
 %% 7 CC
@@ -69,15 +84,15 @@ figure; imagesc(oImage);
 
 %% 9 Optimize
 
-% definition of similarity measure SM(p)
-oSM = @(iPar) criterionFcn( iPar, 'cc', ct, Xray );
-% parameters of the simplex optimization
-opts = optimset('Display','iter',...
-'MaxIter',100,...
-'TolX',1e-4,...
-'TolFun',1e-3 );
-
-[iPar_opt,oSM_opt,flag,grad,hessian] = fminunc( oSM, 1e-2*ones(6,1), opts )
+% % definition of similarity measure SM(p)
+% oSM = @(iPar) criterionFcn( iPar, 'cc', ct, Xray );
+% % parameters of the simplex optimization
+% opts = optimset('Display','iter',...
+% 'MaxIter',100,...
+% 'TolX',1e-4,...
+% 'TolFun',1e-3 );
+% 
+% [iPar_opt,oSM_opt,flag,grad,hessian] = fminunc( oSM, 1e-2*ones(6,1), opts )
 
 %% look at the pict
 oImage=drr( ct, Xray, iStep,iPar_opt);
@@ -93,9 +108,19 @@ opts = optimset('Display','iter',...
 'MaxIter',100,...
 'TolX',1e-4,...
 'TolFun',1e-4 );
+[iPar_opt,oSM_opt,flag,smth] = fminsearch( oSM, [0 0 0 0 0 0], opts);
 
-[iPar_opt,oSM_opt,flag,smth] = fminunc( oSM, 1e-2*ones(6,1), opts );
 
+%% 9.3 MI and fminunc
+% definition of similarity measure SM(p)
+oSM = @(iPar) criterionFcn( iPar, 'mi', ct, Xray );
+% parameters of the simplex optimization
+opts = optimset('Display','iter-detailed',...
+'MaxIter',100,...
+'TolX',1e-4,...
+'TolFun',1e-4,...
+'LargeScale','off');
+[iPar_opt,oSM_opt,flag,smth] = fminunc( oSM, [0 0 0 0 0 0], opts);
 %% look at the pict
 oImage=drr( ct, Xray, iStep,iPar_opt);
 imshowpair(oImage,Xray.image);

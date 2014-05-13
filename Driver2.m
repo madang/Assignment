@@ -23,7 +23,7 @@ ct.currentTransform=ct.TPos;
 %% Show the transformed 3D and 2D sampling grids and the position of the X-ray source Xray.SPos by using the function plot3().
 % blue for Xray
 
-ts=150;% spacing to speed up plots interaction
+ts=1;% spacing to speed up plots interaction
 plot3(Xray.gx(1:ts:end),Xray.gy(1:ts:end),Xray.gz(1:ts:end),'.','Color','b');
 grid on;
 hold on;

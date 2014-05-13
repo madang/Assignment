@@ -56,6 +56,7 @@ saveas(gcf,'hist_relevant','eps');
 Xray.windowed=windowImage(Xray.image,90,140);
 figure; image(Xray.windowed); colormap(gray(256)); axis image;
 title('Windowed image, center=90, wigth=120');
+ set(gca,'FontName','Times New Roman','FontSize',8);
 saveas(gcf,'windowed','eps');
 
 %% Question one is finished, let's spit out all the data necessary for the next questions
