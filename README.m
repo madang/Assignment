@@ -143,3 +143,4 @@ opts = optimset('Display','iter-detailed',...
 %% look at the pict
 oImage=drr( ct, Xray, iStep,iPar_opt);
 imshowpair(oImage,Xray.image);
+chess(sc(oImage),Xray.image,30);
