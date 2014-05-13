@@ -3,7 +3,10 @@ function beautify(varargin)
 %   Detailed explanation goes here
 wid=8.6;
 hei=6.4;
-if nargin>0 && varargin{1}>1
+if nargin>0 
+    switch varargin{1}
+        case 's'
+        case 2
     wid=wid/2;
     hei=hei/2;
 end
