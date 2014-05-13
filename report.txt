@@ -148,3 +148,5 @@ opts = optimset('Display','iter-detailed',...
 from initial position of [0 0 0 0 0 0] leads to a minimum correlation of -0.704187 at [-1.7230  -14.8667   -5.9609   -3.0313    2.3697   -3.4978]
 
 <<CC_MINUNC.PNG>>
+
+Let's use this as a starting point for fminsearch
