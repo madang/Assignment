@@ -133,7 +133,7 @@ yrange=floor(min(ipy)):ceil(max(ipy));
 %     oImage=reshape(drr_pixel_values,size(Xray.image));
    
 %% return oMask as well
-    oMask=zeros(size(oImage));
+    oMask=false(size(oImage));
     oMask(xrange,yrange)=reshape(sum(valid)>0,[numel(xrange),numel(yrange)]);
 %%
 

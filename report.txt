@@ -55,16 +55,15 @@ Results of rigid transformation of the CT grid with parameters [0 0 0 90 0 0] ar
 
 *Figure
 <question4.eps>
-Fig.3. Positions of CT volume, X-ray image and X-ray source in world coordinates.
+Fig.3. Positions of CT volume after a trnasformation with parameters [0 0 0 90 0 0].
 
 *Heading 1
 Cone beam projection
 *Body text
 Digitally reconstructed radiographs (DRR) of CT 3D image may be used to perform 3D-2D registration. These are made using cone beam projection.
-According to the assignment intensity of each voxel in the CT 3D image represents the
-atenuation coefficient µ(x) of the corresponding structure. A formula
+According to the assignment intensity of each voxel in the CT 3D image represents the atenuation coefficient µ(x) of the corresponding structure. A formula
 <EQ1>
-is proposed for the cone beam projection. This formula is not entirely correct from the point of view of physics. A more correct (yet still neglecting different distance of Xray pixels to the source) formula  would be
+is proposed for the cone beam projection. This formula is not entirely correct from the point of view of physics. A more correct (yet still neglecting different distance of Xray image pixels to the source) formula  would be
 <EQ2>,
 where I0 is the intensity of the source. For given setup this should be set to 255.
 Anyway a function *drr.m* that performs cone beam projection using formula <EQ1> has been written. 
@@ -82,7 +81,7 @@ Function *drr.m* has been extended to perform a projection of CT 3D volume after
 
 *Figure
 <question5.eps>
-Fig.5. A cone beam projection DRR of the given CT 3D image into the X-ray image plane.
+Fig.5.Examples of  beam projection DRR of the given CT 3D image transformed with parameters iPar = [0 20 0 0 0 0], iPar = [0 0 0 0 45 0], iPar = [0 0 0 0 0 90] 
 
 *Heading 1
 Discarding anatomically irrelevant information
@@ -128,4 +127,23 @@ Values of mutual information for  given DRR of CT 3D image and X-ray when  one o
 <mi_var_alpha.eps>
 <mi_var_beta.eps>
 <mi_var_gamma.eps>
-Fig.7. Dependencies of mutual information forn given DRR of CT 3D and X-ray images depending on variation of rigid body transform parameters.
+Fig.8. Dependencies of mutual information forn given DRR of CT 3D and X-ray images depending on variation of rigid body transform parameters.
+
+*Heading 1
+Similarity measure optimization
+*Body text
+All optimization algorithm search for local minima. It is therefore crucial to attempt running optimization from different initial parameter values even if optimization succeeds and compare resulting similarity measures.
+
+For example minimization using fminsearch with example parameters as shown in assignment does not finish in 50 iterations.
+When run with options 'MaxIter',200,'TolX',1e-4,'TolFun',1e-4 fminsearch converges to parameter values [0.0079 0.0035 0.0100 
+    0.0172 0.0085 0.0096] but this is a bad registration <BADREG1.PNG>
+	
+Optimization with fminunc yields a much better result. A run with these options
+opts = optimset('Display','iter-detailed',...
+'MaxIter',200,...
+'TolX',1e-4,...
+'TolFun',1e-4,...
+'LargeScale','off');
+from initial position of [0 0 0 0 0 0] leads to a minimum correlation of -0.704187 at [-1.7230  -14.8667   -5.9609   -3.0313    2.3697   -3.4978]
+
+<<CC_MINUNC.PNG>>
