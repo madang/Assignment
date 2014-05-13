@@ -159,4 +159,14 @@ it stops at the first iteration and leads to the same point
  [-2.1258  -13.6431   -8.7458   -4.2660   -2.2687   -6.1350]
 
 Introducing random perturbation of amplitude 5
+Running fminunc with this perturbation [ 1.3925    2.7344    4.7875    4.8244    0.7881    4.8530]
+
+It converges to [-0.7545  -13.8155   -6.7758    0.0024   -0.2383   -2.2834]
+
+*Perturbing from this point with amplitude 10
+Initial parameter value [8.8172   -8.9618    1.2270    1.4212    3.9793    6.8739]
+Running fminunc
+
+
+CC=-0.752567
 
