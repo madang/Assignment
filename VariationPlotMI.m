@@ -17,7 +17,8 @@ for i=1:numel(iRange)
 end
 figure;plot(iRange,mi);
 xlabel(iWhat);
-ylabel('mi');
+% ylabel('mi');
+beautify(2);
 saveas(gcf,strcat('mi','_var_',iWhat),'eps');
 
 end

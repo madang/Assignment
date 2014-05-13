@@ -31,9 +31,7 @@ hold on;
  
  % Magenta for source
  plot3(Xray.SPos(1),Xray.SPos(2),Xray.SPos(3),'.','Color','m')
-
-
- set(gca,'FontName','Times New Roman','FontSize',10);
+beautify;
 % saveas(gcf,'question4','eps');
 % plot3(oX(1),oY(1),oZ(1),'o','Color','k');
 % 
@@ -69,19 +67,19 @@ figure; image(oImage); colormap(gray(256));
 % teset2=corrcoef(oImage,Xray.image); % Built-in
 % cc=teset2(2);
 
-% VariationPlotCC(ct,Xray,-20:2:20,1,'tx');
-% VariationPlotCC(ct,Xray,-20:2:20,2,'ty');
-% VariationPlotCC(ct,Xray,-20:2:20,3,'tz');
-% VariationPlotCC(ct,Xray,-10:1:10,4,'alpha)');
-% VariationPlotCC(ct,Xray,-10:1:10,5,'beta');
-% VariationPlotCC(ct,Xray,-10:1:10,6,'gamma)');
+VariationPlotCC(ct,Xray,-20:2:20,1,'tx');
+VariationPlotCC(ct,Xray,-20:2:20,2,'ty');
+VariationPlotCC(ct,Xray,-20:2:20,3,'tz');
+VariationPlotCC(ct,Xray,-10:1:10,4,'alpha)');
+VariationPlotCC(ct,Xray,-10:1:10,5,'beta');
+VariationPlotCC(ct,Xray,-10:1:10,6,'gamma)');
 %% 8 MI
-% VariationPlotMI(ct,Xray,-20:2:20,1,'tx');
-% VariationPlotMI(ct,Xray,-20:2:20,2,'ty');
-% VariationPlotMI(ct,Xray,-20:2:20,3,'tz');
-% VariationPlotMI(ct,Xray,-10:1:10,4,'alpha');
-% VariationPlotMI(ct,Xray,-10:1:10,5,'beta');
-% VariationPlotMI(ct,Xray,-10:1:10,6,'gamma');
+VariationPlotMI(ct,Xray,-20:2:20,1,'tx');
+VariationPlotMI(ct,Xray,-20:2:20,2,'ty');
+VariationPlotMI(ct,Xray,-20:2:20,3,'tz');
+VariationPlotMI(ct,Xray,-10:1:10,4,'alpha');
+VariationPlotMI(ct,Xray,-10:1:10,5,'beta');
+VariationPlotMI(ct,Xray,-10:1:10,6,'gamma');
 
 %% 9 Optimize
 
@@ -135,12 +133,13 @@ opts = optimset('Display','iter',...
 % definition of similarity measure SM(p)
 oSM = @(iPar) criterionFcn( iPar, 'mi', ct, Xray );
 % parameters of the simplex optimization
+% parameters of the simplex optimization
 opts = optimset('Display','iter-detailed',...
-'MaxIter',100,...
+'MaxIter',200,...
 'TolX',1e-4,...
 'TolFun',1e-4,...
 'LargeScale','off');
-[iPar_opt,oSM_opt,flag,smth] = fminunc( oSM, [0 0 0 0 0 0], opts);
+[iPar_opt,oSM_opt,flag,cc_minunc_out] = fminunc( oSM, [0 0 0 0 0 0], opts);
 %% look at the pict
 oImage=drr( ct, Xray, iStep,iPar_opt);
 imshowpair(oImage,Xray.image);

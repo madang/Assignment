@@ -41,7 +41,7 @@ Verifying the geometric setup
 Samplimg grids for Xray.image and ct.volume are created and stored in gridX, gridY and gridZ fields of both Xray and ct structures. These grids are then transformed using TPos field and saved as gx, gy and gz fields. Fig. 2 displays an image showing position of X-ray and CT volume and source for the projection in world coordinates.
 
 *Figure
-<README_04.png>
+<plot3_orig.eps>
 Fig.2. Positions of CT volume, X-ray image and X-ray source in world coordinates.
 
 
@@ -55,7 +55,7 @@ Results of rigid transformation of the CT grid with parameters [0 0 0 90 0 0] ar
 
 *Figure
 <question4.eps>
-Fig.3. Positions of CT volume after a trnasformation with parameters [0 0 0 90 0 0].
+Fig.3. Positions of CT volume after a transformation with parameters [0 0 0 90 0 0].
 
 *Heading 1
 Cone beam projection
@@ -100,6 +100,7 @@ One of the similarity measures to be used is correlation coefficient given by eq
 If we have images in the same modality, pixel values corresponding to the same structure would produce terms of the same sign in the nominator in <Equation 3> . Therefore correlation coefficient would have positive value. The better the pictures are aligned the closer it would be to 1. Conversely if we have different modalities so that the same structure would give pixel values above mean picture intensity in one image and below mean picture intensity in another one then we would have negative nominator. The better the structures would be aligned the smaller (more negative)the correlation coefficient would be. Theoretically it could reach -1 for a perfectly aligned negative of the very same picture. These pictures would be anti-correlated. In our case we have anti-correlated images and  therefore we strive to minimize the correlation coefficient.
 Values of correlation coefficient between  given DRR of CT 3D image and X-ray when  one of the rigid body parameter varies are shown in Fig. 7
 
+
 *Figure
 <cc_var_tx.eps>
 <cc_var_ty.eps>
@@ -132,7 +133,7 @@ Fig.8. Dependencies of mutual information forn given DRR of CT 3D and X-ray imag
 *Heading 1
 Similarity measure optimization
 *Body text
-All optimization algorithm search for local minima. It is therefore crucial to attempt running optimization from different initial parameter values even if optimization succeeds and compare resulting similarity measures.
+All optimization algorithm search for local minima. If optimization converges it is crucial  introduce some perturbations to the resulting parameter and use result as a starting point for a few other optimization run. If they converge to the same point or to a point with a higher value of the criterion function then the convergence point is a good candidate. If we find a new minimum then we need to apply perturbation to this point.
 
 For example minimization using fminsearch with example parameters as shown in assignment does not finish in 50 iterations.
 When run with options 'MaxIter',200,'TolX',1e-4,'TolFun',1e-4 fminsearch converges to parameter values [0.0079 0.0035 0.0100 
