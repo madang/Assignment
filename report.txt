@@ -150,3 +150,13 @@ from initial position of [0 0 0 0 0 0] leads to a minimum correlation of -0.7041
 <<CC_MINUNC.PNG>>
 
 Let's use this as a starting point for fminsearch
+it converges to [ -2.1258  -13.6431   -8.7458   -4.2660   -2.2687   -6.1350]
+cc=-0.7756; but the registration is worse
+Saved oImage and oMask as <<CHAIN_CC2>>
+
+Using this as starting point for CC fminunc
+it stops at the first iteration and leads to the same point
+ [-2.1258  -13.6431   -8.7458   -4.2660   -2.2687   -6.1350]
+
+Introducing random perturbation of amplitude 5
+

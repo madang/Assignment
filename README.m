@@ -100,7 +100,7 @@ imshowpair(oImage,Xray.image);
 
 
 %% CC and fminunc 
-
+pe
 oSM = @(iPar) criterionFcn( iPar, 'cc', ct, Xray );
 % parameters of the simplex optimization
 opts = optimset('Display','iter-detailed',...
@@ -108,7 +108,7 @@ opts = optimset('Display','iter-detailed',...
 'TolX',1e-4,...
 'TolFun',1e-4,...
 'LargeScale','off');
-[iPar_opt,oSM_opt,flag,cc_minunc_out] = fminunc( oSM, [0 0 0 0 0 0], opts);
+[iPar_opt,oSM_opt,flag,cc_minunc_out] = fminunc( oSM, iPar_opt, opts)
 
 %% look at the pict
 oImage=drr( ct, Xray, iStep,iPar_opt);
