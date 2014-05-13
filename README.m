@@ -82,7 +82,7 @@ VariationPlotMI(ct,Xray,-10:1:10,5,'beta');
 VariationPlotMI(ct,Xray,-10:1:10,6,'gamma');
 
 %% 9 Optimize
-
+partial_mins=[-20 -14 20 -10 10 10];
 % definition of similarity measure SM(p)
 oSM = @(iPar) criterionFcn( iPar, 'cc', ct, Xray );
 % parameters of the simplex optimization
@@ -91,7 +91,7 @@ opts = optimset('Display','iter',...
 'TolX',1e-4,...
 'TolFun',1e-4 );
 
-[iPar_opt,oSM_opt,flag,cc_minsearch_out] = fminsearch( oSM, 1e-2*ones(6,1), opts )
+[iPar_opt,oSM_opt,flag,cc_minsearch_out] = fminsearch( oSM, partial_mins, opts )
 
 %% look at the pict
 oImage=drr( ct, Xray, iStep,iPar_opt);
