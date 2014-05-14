@@ -9,14 +9,14 @@ Xray.image=Xray.windowed;
 % First standart unit of \mu is reverse centimeter. Therefore for sampling
 % grid of 1 millimeter we need to divide the integral by 10. Second - for
 % our Xray unattenuated beams give values 255. Hence the following
-iPar=[0 0 0 0 90 0];
+iPar=[[-5.21094774424577,-12.2476313875630,-8.80058722459295,-10.2092172921262,-1.35637591084498,-7.29923073348295]];
 I0=255;
 voxSizeCm=0.1; %voxel size in cm, isotropicity assumed
 godCoeff=0.0005; %after one try without it all value were zero. This means 
 % I didn't guess the units of \mu correctly so God decided that this
 % coefficient should be present in the formula
 [oImage,oMask]=drr( ct, Xray, iStep, iPar);
-AdjustedImage=I0*exp(-oImage*voxSizeCm*godcoeff);
+AdjustedImage=I0*exp(-oImage*voxSizeCm*godCoeff);
 
 %% Take a look at the result
 figure;
@@ -27,7 +27,7 @@ beautify;
 axis image;
 
 %% declare an anon function for adjusting drr
-adj=@(oImage)I0*exp(-oImage*voxSizeCm*godcoeff);
+adj=@(oImage)I0*exp(-oImage*voxSizeCm*godCoeff);
 
 %% try cc optimization
 %I've added a 6th parameter to iAdj, which should be true to adjust the 

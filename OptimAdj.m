@@ -1,17 +1,17 @@
 %% OPTIMize and try to get out of the resulting basin of attraction
-%  iPar_opt=[0 0 0 0 0 0]
-%  oSM_opt=0;
-%  try_another=0;
+ iPar_opt=[-1.20652456215654,-1.52095841676599,-1.39033043105320,-1.45002942032096,-1.72012281734266,-1.66931110663657]
+ oSM_opt=[-1.89005360451530]
+ try_another=0;
  %% some utities
  I0=255;
 voxSizeCm=0.1; %voxel size in cm, isotropicity assumed
 godCoeff=0.0005; %after one try without it all value were zero. This means 
  adj=@(oImage)I0*exp(-oImage*voxSizeCm*godCoeff);
 %%
-for never=22:100
+for never=53:10000
   
 % oSM = @(iPar) criterionFcn( iPar, 'mi', ct, Xray );
-oSM = @(iPar) -criterionFcn( iPar, 'cc', ct, Xray );
+oSM = @(iPar) criterionFcn( iPar, 'mi', ct, Xray );
 
 %     % for large perturbations a skewed vector for perturbation makes sense
 %     %(obviously not much sense to perturbe rotation, but it's good to shift in z direction
@@ -35,8 +35,8 @@ else
     % parameters of the fminunc optimization
 opts = optimset('Display','iter-detailed',...
 'MaxIter',200,...
-'TolX',1e-4,...
-'TolFun',1e-5,...
+'TolX',1e-5,...
+'TolFun',1e-6,...
 'LargeScale','off');
 
 [iPar_opt_new,oSM_opt_new,flag,cc_minunc_out] = fminunc( oSM, iPar_pert, opts)
@@ -53,10 +53,12 @@ else
 end
 %% look at the pict
 oImage=drr( ct, Xray, iStep,iPar_opt_new);
-imshowpair(255-adj(oImage)',255-Xray.image');
-drawnow;
+% imshowpair(255-adj(oImage)',255-Xray.image');
+% axis image;
+% drawnow;
 
 %% chess
 chess(adj(oImage)',Xray.image',25);
+axis image;
 drawnow;
 end
