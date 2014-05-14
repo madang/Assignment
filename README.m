@@ -142,6 +142,6 @@ opts = optimset('Display','iter-detailed',...
 'LargeScale','off');
 [iPar_opt,oSM_opt,flag,cc_minunc_out] = fminunc( oSM, [0 0 0 0 0 0], opts);
 %% look at the pict
-oImage=drr( ct, Xray, iStep,iPar_opt);
+oImage=drr( ct, Xray, iStep,[0 0 -80 0 0 0]);
 imshowpair(oImage,Xray.image);
 % chess(sc(oImage),Xray.image,30);
