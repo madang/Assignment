@@ -133,7 +133,11 @@ Fig.8. Dependencies of mutual information forn given DRR of CT 3D and X-ray imag
 *Heading 1
 Similarity measure optimization
 *Body text
-All optimization algorithm search for local minima. If optimization converges it is crucial  introduce some perturbations to the resulting parameter and use result as a starting point for a few other optimization run. If they converge to the same point or to a point with a higher value of the criterion function then the convergence point is a good candidate. If we find a new minimum then we need to apply perturbation to this point.
+All optimization algorithm search for local minima. These for attraction basins. Therefore it is crucial  introduce some perturbations to the resulting parameter and use result as a starting point for a few other optimization runs. If they converge to the same point or to a point with a higher value of the criterion function then the convergence point is a good candidate. If we find a new minimum then we need to apply perturbation to this point.
+
+Generally speaking it would also make sense to try very different random starting points. This would require a lot of computation time. In our case the initial position is good enough so it doesn't make much sense.
+
+
 
 For example minimization using fminsearch with example parameters as shown in assignment does not finish in 50 iterations.
 When run with options 'MaxIter',200,'TolX',1e-4,'TolFun',1e-4 fminsearch converges to parameter values [0.0079 0.0035 0.0100 
