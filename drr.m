@@ -1,4 +1,4 @@
-function [ oImage, oMask ] = drr( ct, Xray, iStep, iPar, iThreshold)
+function [ oImage, oMask ] = drr( ct, Xray, iStep, iPar, iThreshold, iAdj)
 if nargin<4
     iPar=[0 0 0 0 0 0];
 end
@@ -136,7 +136,15 @@ yrange=floor(min(ipy)):ceil(max(ipy));
     oMask=false(size(oImage));
     oMask(xrange,yrange)=reshape(sum(valid)>0,[numel(xrange),numel(yrange)]);
 %%
+if nargin>5 && iAdj
+    I0=255;
+voxSizeCm=0.1; %voxel size in cm, isotropicity assumed
+godCoeff=0.0005; %after one try without it all value were zero. This means 
+% I didn't guess the units of \mu correctly so God decided that this
+% coefficient should be present in the formula
+oImage=I0*exp(-oImage*voxSizeCm*godCoeff);
 
+end
 
 end
 

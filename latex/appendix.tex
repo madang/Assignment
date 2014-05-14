@@ -1,0 +1,143 @@
+%% LyX 2.0.6 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{luainputenc}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\title{A more physical way to make digitally reconstructed radiographs}
+
+
+\IEEEaftertitletext{An appendix to the 2D-3D registration report}
+
+
+\author{Hennadii Madan}
+\maketitle
+\begin{abstract}
+We investigate whether a more physically correct way to calculate
+intensities of digitally reconstructed radiographs will give any benefits
+to registration.
+\end{abstract}
+
+\section{Introduction}
+
+During preparation of the report for young researcher candidate assignment
+in image processing laboratory, faculty of electrical engineering,
+Ljubljana University I have noticed that using formula {*}INTEGRAL{*}
+does not make physical sense. After some simple calculation it became
+clear that a more physically correct way to obtain a digitally reconstructed
+radiograph (DRR) would be to use {*}FORMULA E\textasciicircum{}-INTEGRAL{*}.
+It is uclear wether this new way will improve registration, after
+all it is just an intensity mapping. Due to time constraints this
+idea was not tested during the assignment. Now I set to find this
+out.
+
+
+\section{Preparations}
+
+A function to create DRRs {*}drr.m{*} has been augmented to accept
+the sixth logical (MATLAB way to say 'boolean') paremeter which would
+trigger exponentiation. Since the units of the coefficient of attenuation
+are used in this CT scan are unknown I had to introduce a scaling
+constant (godCoeff in the code). It would scale the resulting images
+approximately to the range 10:255. A slightly modifie copy of OPTIM.m
+optimization script named OptimAdj.m has been created. Optimizator
+parameters were the same as in the original report. That is 'MaxIter'
+= 200. 'TolX' = 1e-4,'TolFun' =1e-5 both for CC and MI.
+
+
+\section{Results}
+
+
+\subsection{Correlation coefficient}
+
+Astonishingly (for me) after the very first iteration, i.e. after
+a single run of fminunc from the strating point {[}0 0 0 0 0 0{]}
+a CC of 0.7. Optimization log saved as ADJ\_OPT\_LOG.mat
+
+
+\section{Discussion}
+
+So CC registration indeed improved. It is reasonble since for example
+two exponents corellate better than a line and an exponent. Not only
+does it affect the magnitude of cerellation coefficient, but also
+the resulting alignment upon optimization. I explain this to myself
+the following way. When one changes the intensity mapping in an image
+in effect he makes some features more prominent, the algorythm would
+make these features match with features that are prominent in the
+unaltered images. Since in general these are different we will obtain
+a worse alignment then when we have perfectly matchin intensity mappings.
+
+
+\section{Extras}
+
+\begin{table}
+
+
+\caption{CC optimization log}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+ &  &  &  &  &  &  & \tabularnewline
+\hline 
+\end{tabular}
+
+\end{table}
+
+\end{document}

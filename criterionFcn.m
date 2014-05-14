@@ -7,11 +7,11 @@ pMasked=1;
 % End bugplace
 switch iType
     case 'cc'
-        [oImage,oMask]=drr( ct, Xray, iStep, iPar);
+        [oImage,oMask]=drr( ct, Xray, iStep, iPar,66,true);
         tcc=corrcoef(oImage(oMask),Xray.image(oMask));
         oSM=tcc(2);
     case 'mi'
-        [oImage,oMask]=drr( ct, Xray, iStep, iPar);
+        [oImage,oMask]=drr( ct, Xray, iStep, iPar,66,true);
         oSM=-MutualInformation(oImage(oMask),Xray.image(oMask));
     otherwise
         error(strcat('criterionFcn:: unknown iType:',iType));

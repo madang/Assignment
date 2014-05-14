@@ -1,0 +1,149 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass IEEEtran
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+A more physical way to make digitally reconstructed radiographs
+\end_layout
+
+\begin_layout After Title Text
+An appendix to the 2D-3D registration report
+\end_layout
+
+\begin_layout Author
+Hennadii Madan
+\end_layout
+
+\begin_layout Abstract
+We investigate whether a more physically correct way to calculate intensities
+ of digitally reconstructed radiographs will give any benefits to registration.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+During preparation of the report for young researcher candidate assignment
+ in image processing laboratory, faculty of electrical engineering, Ljubljana
+ University I have noticed that using formula *INTEGRAL* does not make physical
+ sense.
+ After some simple calculation it became clear that a more physically correct
+ way to obtain a digitally reconstructed radiograph (DRR) would be to use
+ *FORMULA E^-INTEGRAL*.
+ It is uclear wether this new way will improve registration, after all it
+ is just an intensity mapping.
+ Due to time constraints this idea was not tested during the assignment.
+ Now I set to find this out.
+\end_layout
+
+\begin_layout Section
+Preparations
+\end_layout
+
+\begin_layout Standard
+A function to create DRRs *drr.m* has been augmented to accept the sixth
+ logical (MATLAB way to say 'boolean') paremeter which would trigger exponentiat
+ion.
+ Since the units of the coefficient of attenuation are used in this CT scan
+ are unknown I had to introduce a scaling constant (godCoeff in the code).
+ It would scale the resulting images approximately to the range 10:255.
+ A slightly modifie copy of OPTIM.m optimization script named OptimAdj.m has
+ been created.
+ Optimizator parameters were the same as in the original report.
+ That is 'MaxIter' = 200.
+ 'TolX' = 1e-4,'TolFun' =1e-5 both for CC and MI.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Correlation coefficient
+\end_layout
+
+\begin_layout Standard
+Astonishingly (for me) after the very first iteration, i.e.
+ after a single run of fminunc from the strating point [0 0 0 0 0 0] a CC
+ of 0.7
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Standard
+So CC registration indeed improved.
+ It is reasonble since for example two exponents corellate better than a
+ line and an exponent.
+ Not only does it affect the magnitude of cerellation coefficient, but also
+ the resulting alignment upon optimization.
+ I explain this to myself the following way.
+ When one changes the intensity mapping in an image in effect he makes some
+ features more prominent, the algorythm would make these features match
+ with features that are prominent in the unaltered images.
+ Since in general these are different we will obtain a worse alignment then
+ when we have perfectly matchin intensity mappings.
+\end_layout
+
+\end_body
+\end_document
