@@ -95,10 +95,10 @@ Fig.6. A- Histogram of CT 3D image. B - a DRR of thresholded CT 3D image.
 *Heading 1
 Correlation coefficient
 *Body text
-One of the similarity measures to be used is correlation coefficient given by equation.
+One of the similarity measures to be used is correlation coefficient (CC) given by equation.
 <Eq3>
-If we have images in the same modality, pixel values corresponding to the same structure would produce terms of the same sign in the nominator in <Equation 3> . Therefore correlation coefficient would have positive value. The better the pictures are aligned the closer it would be to 1. Conversely if we have different modalities so that the same structure would give pixel values above mean picture intensity in one image and below mean picture intensity in another one then we would have negative nominator. The better the structures would be aligned the smaller (more negative)the correlation coefficient would be. Theoretically it could reach -1 for a perfectly aligned negative of the very same picture. These pictures would be anti-correlated. In our case we have anti-correlated images and  therefore we strive to minimize the correlation coefficient.
-Values of correlation coefficient between  given DRR of CT 3D image and X-ray when  one of the rigid body parameter varies are shown in Fig. 7
+If we have images in the same modality, pixel values corresponding to the same structure would produce terms of the same sign in the nominator in <Equation 3> . Therefore CC would have positive value. The better the pictures are aligned the closer it would be to 1. Conversely if we have different modalities so that the same structure would give pixel values above mean picture intensity in one image and below mean picture intensity in another one then we would have negative nominator. The better the structures would be aligned the smaller (more negative)the CC would be. Theoretically it could reach -1 for a perfectly aligned negative of the very same picture. These pictures would be anti-correlated. In our case we have anti-correlated images and  therefore we strive to minimize the CC.
+Values of CC between  given DRR of CT 3D image and X-ray when  one of the rigid body parameter varies are shown in Fig. 7
 
 
 *Figure
@@ -133,10 +133,17 @@ Fig.8. Dependencies of mutual information forn given DRR of CT 3D and X-ray imag
 *Heading 1
 Similarity measure optimization
 *Body text
-All optimization algorithm search for local minima. These for attraction basins. Therefore it is crucial  introduce some perturbations to the resulting parameter and use result as a starting point for a few other optimization runs. If they converge to the same point or to a point with a higher value of the criterion function then the convergence point is a good candidate. If we find a new minimum then we need to apply perturbation to this point.
+All optimization algorithm search for local minima. These form attraction basins. Therefore it is crucial  introduce some perturbations to the resulting parameter and use result as a starting point for a few other optimization runs. If they converge to the same point or to a point with a higher value of the criterion function then the convergence point is a good candidate. If we find a new minimum then we need to apply perturbation to this point. If we have visual confirmation of registration then it is reasonable to decrease the amplitude of perturbation as well as tolerances to refine the optimal parameters.
 
 Generally speaking it would also make sense to try very different random starting points. This would require a lot of computation time. In our case the initial position is good enough so it doesn't make much sense.
 
+Fminunc is capable of making large steps so it is good at initial approach to the minimun. Simplex search is more local and therefore is good for refinement of the parameters. When using fminunc on MI it  often stops prematurely because it tries to take very small steps which don't change MI enough. 
+
+CC  doesn't have a sharp peak on algnment, it is therefore very hard to obtain perfect alignment using minization algorithms. MI theoretically has to have a sharper peak on perfect alignment. Therefore a two step algorithm could be used - first minimize CC with fminunc then minimize MI. 
+
+An algorithm that implements repeated minimization and perturbation in order to find deeper minima has been implemented. It also alternates between fminunc and fminsearch depending on improvement of similarity measure in given iteration. It is saved as OPTIM.m.
+
+After running OPTIM.m for 24 iteration in order to minimize CC (15 iterations with perturbation amplitude 2 and 9 with perturbation ampitude 1) the smallest value that has been obtained was -0,7875 at parameter values of [-18.1437 10.1315 -9.3191 -7.8789 -1.5154 -7.3976]. Results can be seen in figure 9. This is not perfect alignment.
 
 
 For example minimization using fminsearch with example parameters as shown in assignment does not finish in 50 iterations.

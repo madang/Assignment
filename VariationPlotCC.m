@@ -17,7 +17,6 @@ for i=1:numel(iRange)
 end
 figure;plot(iRange,cc);
 xlabel(iWhat);
-ylabel('cc');
 beautify(2);
 saveas(gcf,strcat('cc','_var_',iWhat),'eps');
 

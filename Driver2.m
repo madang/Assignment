@@ -33,6 +33,7 @@ plot3(ct.gx(1:ts:end),ct.gy(1:ts:end),ct.gz(1:ts:end),'.','Color','g');
 
 % Magenta for the source
 plot3(Xray.SPos(1),Xray.SPos(2),Xray.SPos(3),'.','Color','m')
+hold off;
 beautify;
 saveas(gcf,'plot3_orig','png')
 
