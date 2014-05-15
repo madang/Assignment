@@ -22,8 +22,8 @@ if any(b(:)>255)
 end
 %% Mutual histogram
 % This is a hack to speed things up a little bit
-c=sort(a(:)*256+b(:)); % make a matrix where each unique combination of a and b values yields a unique value
-counter=histc(c,0:65535);
+c=sort(floor(a(:))*256+b(:)); % make a matrix where each unique combination of a and b values yields a unique value
+counter=histc(c(:),0:65535);
 counter(counter==0)=[];
 counter=counter./numel(a);
 HAB=-sum(counter.*log2(counter)); % using bit as a unit of entropy
