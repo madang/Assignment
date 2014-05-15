@@ -28,12 +28,12 @@ counter(counter==0)=[];
 counter=counter./numel(a);
 HAB=-sum(counter.*log2(counter)); % using bit as a unit of entropy
 
-counter=histc(a,0:255);
+counter=histc(a(:),0:255);
 counter(counter==0)=[];
 counter=counter./numel(a);
 HA=-sum(counter.*log2(counter));
 
-counter=histc(b,0:255);
+counter=histc(b(:),0:255);
 counter(counter==0)=[];
 counter=counter./numel(b);
 HB=-sum(counter.*log2(counter));
