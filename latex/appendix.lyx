@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
 \textclass IEEEtran
@@ -12,13 +12,13 @@
 \font_roman default
 \font_sans default
 \font_typewriter default
+\font_math auto
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
-
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -29,15 +29,24 @@
 \use_hyperref false
 \papersize default
 \use_geometry false
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 1
 \index Index
 \shortcut idx
@@ -142,7 +151,24 @@ Mutul information records start at 28, initial position [0 0 0 0 0 0].
 
 \begin_layout Standard
 At position 53 decreased both tolerance in fminunc by an order.
- Stating value from position 41 (mximal so far).
+ Stating value from position 41 (maximal so far).
+\end_layout
+
+\begin_layout Standard
+After a unasked for reboot and data loss started optimization of MI from
+ iPar_opt=[-1.20652456215654,-1.52095841676599,-1.39033043105320,-1.45002942032096,-
+1.72012281734266,-1.66931110663657] oSM_opt=[-1.89005360451530].
+ Results saved in MI_ADJ_OPT_LOG.m
+\end_layout
+
+\begin_layout Subsection
+A bug in mutual information function
+\end_layout
+
+\begin_layout Standard
+I've found a bug which had to do with matlab function histc working only
+ row-wise and that I used an ugly hack for speedup and made a mistake .
+ This basically invalidates all MI calculations that have been done so far.
 \end_layout
 
 \begin_layout Section
@@ -174,7 +200,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-\begin_inset Caption
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Correlation coefficient optimization log.
@@ -189,7 +215,7 @@ Correlation coefficient optimization log.
 \align left
 \begin_inset Tabular
 <lyxtabular version="3" rows="22" columns="9">
-<features tabularvalignment="middle">
+<features rotate="0" tabularvalignment="middle">
 <column alignment="left" valignment="top" width="0pt">
 <column alignment="left" valignment="top" width="0pt">
 <column alignment="left" valignment="top" width="0pt">
@@ -2038,10 +2064,6 @@ tz
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
