@@ -1,0 +1,1193 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass IEEEtran
+\options conference
+\use_default_options true
+\begin_modules
+logicalmkup
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Registration of 3D and 2D images
+\end_layout
+
+\begin_layout After Title Text
+A report for the 2014 test assignment
+\end_layout
+
+\begin_layout Author
+Hennadii Madan 
+\end_layout
+
+\begin_layout Address
+Department of General Physiology of Nervous System 
+\end_layout
+
+\begin_layout Address
+Bogomoletz Institute of Physiology 
+\end_layout
+
+\begin_layout Address
+Kiev Ukraine 
+\end_layout
+
+\begin_layout Address
+madanh2014@gmail.com
+\end_layout
+
+\begin_layout Abstract
+This is a report for the 2014 test assignment for junior researcher position
+ candidates in the Laboratory of Imaging Technologies, Faculty of Electrical
+ Engineering, University of Ljubljana.
+ The assignment involves registration of a 3D CT data of a single vertebra
+ to an X-ray image of a spine phantom through optimization of a similarity
+ measure between a cone beam projection of the CT volume to the image plane
+ and the X-ray image itself.
+ A Report consist of the answers to the ten questions posed in the assignment.
+\end_layout
+
+\begin_layout Keywords
+3D-2D registration; CT 3d image;
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+In the Laboratory of Imaging Technologies, Faculty of Electrical Engineering,
+ University of Ljubljana each candidate for the junior researcher position
+ is required to perform a test assignment to evaluate his fitness to this
+ position.
+\end_layout
+
+\begin_layout Standard
+Assignment requires the candidate to perform a 3D-2D registration of a CT
+ scan of a vertebra to an X-ray image of a spine segment.
+ It includes 10 tasks to prepare a report on.
+ The assignment comes in a form of a .pdf file with task description supplemented
+ by a .mat file containing the data to be processed.
+ The .mat file contains two structures named 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+ct
+\end_layout
+
+\end_inset
+
+ and 
+\shape italic
+\emph on
+
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+
+\shape italic
+\emph on
+Xray
+\end_layout
+
+\end_inset
+
+
+\shape default
+\emph default
+ representing a 3D CT image of lumbar vertebra L3 and a 2D X-ray image of
+ the lumbar vertebrae L1–L5.
+ The structures contain fields ct.TPos and Xray.TPos that are matrices of
+ the geometric transformations of the coordinate systems of 3D and 2D images
+ from the reference coordinate system to the first image element indexed
+ by (1,1).
+ 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+Xray.SPos
+\end_layout
+
+\end_inset
+
+ is the position of the X-ray source in the reference coordinate system.
+ The spatial sampling of the 3D and 2D images is 1 millimeter isotropic.
+\end_layout
+
+\begin_layout Section
+Improving contrast of X-ray image 
+\end_layout
+
+\begin_layout Standard
+By looking at the scaled X-ray image one can see that vertebrae fit in a
+ rectangular region with top-left corer at 100,170 width 260 and height
+ 120 .
+ Histogram of the image pixels that fall within the rectangle suggests that
+ all relevant structures have intensities within 20:160 range.
+ A windowing with central intensity of 90 and width 140 is performed (Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F1"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement !b
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename D:/Dropbox/FRANJO/Assignment/1A.eps
+	width 4.3cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename D:/Dropbox/FRANJO/Assignment/1B.eps
+	width 4.3cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename D:/Dropbox/FRANJO/Assignment/1C.eps
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Left – original X-ray image with jet colormap.
+ Bottom-a histogram of the original X-ray image region enclosed in the pink
+ rectangle.
+ Right - windowing of the initial X-ray image.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:F1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Verifying the geometric setup
+\end_layout
+
+\begin_layout Standard
+Sampling grids for 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+Xray.image
+\end_layout
+
+\end_inset
+
+ and ct.volume are created and stored in 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+gridX
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+gridY
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+gridZ
+\end_layout
+
+\end_inset
+
+ fields of both 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+Xray 
+\end_layout
+
+\end_inset
+
+and ct structures.
+ These grids are then transformed using 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+TPos
+\end_layout
+
+\end_inset
+
+ field and saved as 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+gx
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+gy
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+gz
+\end_layout
+
+\end_inset
+
+ fields.
+ Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F2"
+
+\end_inset
+
+ displays an image showing position of X-ray and CT volume and source for
+ the projection in world coordinates.
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename D:/Dropbox/FRANJO/Assignment/a2.png
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Positions of CT volume, X-ray image and X-ray source in world coordinates.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:F2"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Rigid Transformation
+\end_layout
+
+\begin_layout Standard
+Multiple conventions about the rotation sequence and whether those rotation
+ are intrinsic or extrinsic are in use.
+ Here a rotation around world z axis is first applied , then it is followed
+ by rotation around world y axis and then around world x axis.
+ These rotations are performed with respect to the center of the CT volume.
+ That is before rotations are performed a translation that moves origin
+ to the center of the CT volume is made and after rotations an inverse translati
+on is carried out.
+ With these conventions parameters [0 0 0 90 0 0] would yield a right-angle
+ rotation around z axis.
+ Results of rigid transformation of the CT grid with parameters [0 0 0 90
+ 0 0] are shown in Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F3"
+
+\end_inset
+
+.
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename D:/Dropbox/FRANJO/Assignment/a3.png
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fig.
+ 3.
+ Positions of CT volume after a transformation with parameters [0 0 0 90
+ 0 0].
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:F3"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Cone beam projection
+\end_layout
+
+\begin_layout Standard
+Digitally reconstructed radiographs (DRR) of CT 3D image may be used to
+ perform 3D-2D registration.
+ These are made using cone beam projection.
+ According to the assignment intensity of each voxel in the CT 3D image
+ represents the attenuation coefficient µ(x) of the corresponding structure.
+ A formula 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\mathcal{P}(V)=\int\mu(l)dl\label{eq:old_projection}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+is proposed for the cone beam projection.
+ This formula is not entirely correct from the point of view of physics.
+ A more correct (yet still neglecting different distance of Xray image pixels
+ to the source) formula would be 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\mathcal{P}(V)=I_{0}\exp(-\int\mu(l)dl)\label{eq:new_projection}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+,where I0 is the intensity of the source.
+ For given setup this should be set to 255.
+ Anyway a function drr.m that performs cone beam projection using formula
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:old_projection"
+
+\end_inset
+
+ ) has been written.
+ In this function beam sampling is done through interpolation of CT 3D image.
+ Therefore it makes no sense to have beam sampling denser than CT 3D image
+ grid.
+ Decreasing beam sampling interval will lead to information loss.
+ Therefore a reasonable beam sampling interval would be around 1 millimeter
+ (Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F4"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Section
+DRRs of rigid body transformed ct 3d image 
+\end_layout
+
+\begin_layout Standard
+Function drr.m has been extended to perform a projection of CT 3D volume
+ after an arbitrary rigid body transformation.
+ DRRs obtained with various transform parameters can be seen in Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F4"
+
+\end_inset
+
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename D:/Dropbox/FRANJO/Assignment/4a.eps
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename D:/Dropbox/FRANJO/Assignment/4b.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../4c.eps
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../4d.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fig.
+ 4.
+ Top-left - A cone beam projection DRR of the given CT 3D image into the
+ X-ray image plane.
+ Examples of beam projection DRR of the given CT 3D image transformed with
+ parameters iPar = [0 20 0 0 0 0] (top-right), iPar = [0 0 0 0 45 0](bottom-left
+) , iPar = [0 0 0 0 0 90] (bottom-right).
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:F4"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Discarding anatomically irrelevant information 
+\end_layout
+
+\begin_layout Standard
+Using a histogram of the CT 3D image (Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F5"
+
+\end_inset
+
+) one can see a peak at value 64 around 2 wide, that corresponds to the
+ background.
+ By thresholding this image at value 66 before performing the projection
+ one effectively removes most if not all non-vertebra data from integration
+ (see Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F5"
+
+\end_inset
+
+).
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../hist3d.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../5.eps
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fig.
+ 5.
+ Top - Histogram of CT 3D image.
+ B (only values between 50 and 105 are shown).
+ Bottom - a DRR of thresholded CT 3D image(zoomed).
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:F5"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Correlation coefficient
+\end_layout
+
+\begin_layout Standard
+One of the similarity measures to be used is correlation coefficient given
+ by equation 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+C(I,J)=\frac{\sum_{x}\sum_{y}(I(x,y)-\bar{I})(J(x,y)-\bar{J})}{\sum_{x}\sum_{y}(I(x,y)-\bar{I})^{2}\cdot\sum_{x}\sum_{y}(J(x,y)-\bar{J})^{2}}\label{eq:CC_formula}
+\end{equation}
+
+\end_inset
+
+ If we have images in the same modality, pixel values corresponding to the
+ same structure would produce terms of the same sign in the nominator in
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:CC_formula"
+
+\end_inset
+
+).
+ Therefore correlation coefficient would have positive value.
+ The better the pictures are aligned the closer it would be to 1.
+ Conversely if we have different modalities so that the same structure would
+ give pixel values above mean picture intensity in one image and below mean
+ picture intensity in another one then we would have negative nominator.
+ The better the structures would be aligned the smaller (more negative)the
+ correlation coefficient would be.
+ Theoretically it could reach -1 for a perfectly aligned negative of the
+ very same picture.
+ These pictures would be anti-correlated.
+ In our case we have anti-correlated images and therefore we strive to minimize
+ the correlation coefficient.
+ Values of correlation coefficient between given DRR of CT 3D image and
+ X-ray when one of the rigid body parameter varies are shown in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F6_CC"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename D:/Dropbox/FRANJO/Assignment/cc_tx.eps
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../cc_ty.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../cc_tz.eps
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../cc_alpha.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../cc_beta.eps
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../cc_gamma.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fig.
+ 6.
+ Dependencies of correlation coefficient between given DRR of CT 3D and
+ X-ray images depending on variation of rigid body transform parameters.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:F6_CC"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Mutual Information
+\end_layout
+
+\begin_layout Standard
+Another similarity measure to be used in this assignment is mutual information
+ given by 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+MI(I,J)=H(I)+H(J)-H(I,J)\label{eq:MI_formula}
+\end{equation}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Regardless of modality the joint distribution histogram gives us the number
+ of all states both pixels at given position can have.
+ Obviously for perfectly aligned pictures the joint probability histogram
+ would have the same amount of different states and same amount of pixels
+ in each state as each individual picture.
+ Therefore according to (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:MI_formula"
+
+\end_inset
+
+) mutual information of perfectly aligned images would be equal to the entropy
+ of an individual image.
+ Any misalignment would increase the amount of states in the joint distribution
+ and therefore increase joint entropy decreasing mutual information.
+ Values of mutual information for given DRR of CT 3D image and X-ray when
+ one of the rigid body parameter varies are shown in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F7-MI"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../mi_tx.eps
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../mi_ty.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../mi_tz.eps
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../mi_a.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../mi_b.eps
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../mi_c.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Dependencies of mutual information between given DRR of CT 3D and X-ray
+ images depending on variation of rigid body transform parameters.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:F7-MI"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Similarity measure optimization 
+\end_layout
+
+\begin_layout Standard
+All optimization algorithms search for local minima.
+ These form attraction basins.
+ Therefore it is crucial to introduce some perturbations to the resulting
+ parameter and use result as a starting point for a few other optimization
+ runs.
+ If they converge to the same point or to a point with a higher value of
+ the criterion function then the convergence point is a good candidate.
+ If we find a new minimum then we need to apply perturbation to this point.
+ If we have visual confirmation of registration then it is reasonable to
+ decrease the amplitude of perturbation as well as tolerances to refine
+ the optimal parameters.
+ 
+\end_layout
+
+\begin_layout Standard
+Generally speaking it would also make sense to try very different random
+ starting points.
+ This would require a lot of computation time.
+ In our case the initial position is good enough so it doesn't make much
+ sense.
+ 
+\end_layout
+
+\begin_layout Standard
+Fminunc is capable of making large steps so it is good at initial approach
+ to the minimum.
+ Simplex search is more local and therefore is good for refinement of the
+ parameters.
+ When using fminunc on MI it often stops prematurely because it tries to
+ take very small steps which don't change MI enough.
+ 
+\end_layout
+
+\begin_layout Standard
+CC doesn't have a sharp peak on alignment, it is therefore very hard to
+ obtain perfect alignment using minimization algorithms.
+ MI theoretically has to have a sharper peak on perfect alignment.
+ Therefore a two step algorithm could be used - first minimize CC with fminunc
+ then minimize MI.
+\end_layout
+
+\begin_layout Standard
+An algorithm that implements repeated minimization and perturbation in order
+ to find deeper minima has been implemented.
+ It also alternates between fminunc and fminsearch depending on improvement
+ of similarity measure in given iteration.
+ It is saved as OPTIM.m.
+ In practice using MI did not improve the registration over CC.
+ I believe this is due to periodic nature of the image.
+\end_layout
+
+\begin_layout Standard
+Perturbation algorithm with high amplitude tended to move the registered
+ image into position where edges of DRR vertebra lie in the middle of two
+ neighboring vertebra.
+ And MI was indeed higher there then in the vicinity of correct alignment
+ (2.1531 bits vs 2.007).
+ OPTIM.m for MI and after 24 iterations with perturbation amplitude 0.5 yielded
+ value of 2.1131 bits at iPar=[-19.6739 -5.4155 -10.9228 -9.9298 -1.7387 -8.0332].
+ After running OPTIM.m for 24 iteration in order to minimize CC (15 iterations
+ with perturbation amplitude 2 and 9 with perturbation amplitude 1) the
+ smallest value that has been obtained was -0,7875 at parameter values of
+ [-18.1437 10.1315 -9.3191 -7.8789 -1.5154 -7.3976].
+ Results can be seen in Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F8"
+
+\end_inset
+
+ .
+ This is not perfect alignment.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../xray.eps
+	width 43mm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename D:/Dropbox/FRANJO/Assignment/aligned.eps
+	width 43mm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../orig.eps
+	width 43mm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../chess.eps
+	width 43mm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Top left –X-ray image, top-right –original DRR, bottom-left – registered
+ DRR, bottom-right – chessboard image for visual inspection of registration
+ results.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:F8"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Pedicular screw
+\end_layout
+
+\begin_layout Standard
+Let’s use results of registration with CC for pedicular screw trajectory
+ mapping (Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:F9-Pedicular-screw-trajectory"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../screw_zoomed.eps
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pedicular screw trajectory projection into the X-ray image
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:F9-Pedicular-screw-trajectory"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
