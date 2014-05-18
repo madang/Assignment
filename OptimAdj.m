@@ -1,17 +1,17 @@
 %% OPTIMize and try to get out of the resulting basin of attraction
- iPar_opt=[-1.20652456215654,-1.52095841676599,-1.39033043105320,-1.45002942032096,-1.72012281734266,-1.66931110663657]
- oSM_opt=[-1.89005360451530]
- try_another=0;
+ iPar_opt=[-4.4499	-11.734	-7.5594	-9.7467	-1.107	-6.319]
+ oSM_opt=-0.8345
+ try_another=1;
  %% some utities
  I0=255;
 voxSizeCm=0.1; %voxel size in cm, isotropicity assumed
 godCoeff=0.0005; %after one try without it all value were zero. This means 
  adj=@(oImage)I0*exp(-oImage*voxSizeCm*godCoeff);
 %%
-for never=53:10000
+for never=1:10000
   
 % oSM = @(iPar) criterionFcn( iPar, 'mi', ct, Xray );
-oSM = @(iPar) criterionFcn( iPar, 'mi', ct, Xray );
+oSM = @(iPar) -criterionFcn( iPar, 'cc', ct, Xray );
 
 %     % for large perturbations a skewed vector for perturbation makes sense
 %     %(obviously not much sense to perturbe rotation, but it's good to shift in z direction
@@ -40,10 +40,10 @@ opts = optimset('Display','iter-detailed',...
 'LargeScale','off');
 
 [iPar_opt_new,oSM_opt_new,flag,cc_minunc_out] = fminunc( oSM, iPar_pert, opts)
-save(strcat('ADj_OPTI',num2str(never)),'iPar_opt_new','oSM_opt_new','flag','cc_minunc_out','try_another');
+% save(strcat('ADj_OPTI',num2str(never)),'iPar_opt_new','oSM_opt_new','flag','cc_minunc_out','try_another');
 
 end
-adj_opt_log(never,:)=[oSM_opt_new, flag, iPar_opt_new];
+cc_log_appendix(never,:)=[oSM_opt_new, flag, iPar_opt_new];
 if oSM_opt_new<oSM_opt
     oSM_opt=oSM_opt_new;
     iPar_opt=iPar_opt_new;
@@ -52,13 +52,13 @@ else
     try_another=mod((try_another+1),2);
 end
 %% look at the pict
-oImage=drr( ct, Xray, iStep,iPar_opt_new);
-% imshowpair(255-adj(oImage)',255-Xray.image');
-% axis image;
-% drawnow;
+oImage=drr( ct, Xray, iStep,iPar_opt_new,66,true);
+imshowpair(255-adj(oImage)',255-Xray.image');
+axis image;
+drawnow;
 
 %% chess
-chess(adj(oImage)',Xray.image',25);
+chess(oImage',Xray.image',20);
 axis image;
 drawnow;
 end
