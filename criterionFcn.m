@@ -1,6 +1,6 @@
 function oSM = criterionFcn( iPar, iType, ct, Xray )
 % A criterion function to use in an optimizer, yields a similarity measure
-%% TODO: Nothing - just be cariful since this is a good place for a nasty bug
+%% TODO: Nothing - just be careful since this is a good place for a nasty bug
 % Will yeild unexpected results when iStep outside is changed
 iStep=1;
 pMasked=1;
