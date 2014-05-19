@@ -3,7 +3,11 @@
 \begin_document
 \begin_header
 \textclass IEEEtran
+\options technote
 \use_default_options true
+\begin_modules
+logicalmkup
+\end_modules
 \maintain_unincluded_children false
 \language english
 \language_package default
@@ -92,19 +96,30 @@ Introduction
 
 \begin_layout Standard
 During preparation of the report for young researcher candidate assignment
- in image processing laboratory, faculty of electrical engineering, Ljubljana
- University I have noticed that using formula 
-\begin_inset Formula $\int\mu(l)dl$
+ I have noticed that using formula 
+\begin_inset Formula 
+\begin{equation}
+\int\mu(l)dl\label{eq:old}
+\end{equation}
+
 \end_inset
 
- does not make physical sense.
+ for intensities in projection image does not make physical sense.
  After some simple calculation it became clear that a more physically correct
  way to obtain a digitally reconstructed radiograph (DRR) would be to use
  
-\begin_inset Formula $I_{0}\cdot e^{-\int\mu(l)dl}$
+\begin_inset Formula 
+\begin{equation}
+I_{0}\cdot e^{-\int\mu(l)dl}\label{eq:new}
+\end{equation}
+
 \end_inset
 
- .
+ , where 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+ is source intensity.
  It is unclear whether this new way will improve registration, after all
  it is just an intensity mapping.
  Due to time constraints this idea was not tested during the assignment.
@@ -116,17 +131,36 @@ Preparations
 \end_layout
 
 \begin_layout Standard
-A function to create DRRs *drr.m* has been augmented to accept the sixth
+The function to create DRRs -- drr.m has been augmented to accept the sixth
  logical (MATLAB way to say Boolean) parameter which would trigger exponentiatio
 n.
- Since the units of the coefficient of attenuation are used in this CT scan
- are unknown I had to introduce a scaling constant (godCoeff in the code).
+ Since the units of the coefficient of attenuation that are used in this
+ CT scan are unknown I had to introduce a scaling constant (
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+godCoeff 
+\end_layout
+
+\end_inset
+
+in the code).
  It would scale the resulting images approximately to the range 10:255.
  A slightly modified copy of OPTIM.m optimization script named OptimAdj.m
  has been created.
  Optimization parameters were the same as in the original report.
- That is 'MaxIter' = 200.
- 'TolX' = 1e-4,'TolFun' =1e-5 both for CC and MI.
+ That is 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+'MaxIter' = 200, 'TolX' = 1e-4,'TolFun' =1e-5
+\end_layout
+
+\end_inset
+
+ both for CC and MI.
 \end_layout
 
 \begin_layout Section
@@ -168,8 +202,8 @@ d.
 \noun default
 \color inherit
 ].
- Compare this to -0,7875 at parameter values of [-18.1437 10.1315 -9.3191 -7.8789
- -1.5154 -7.3976] for the original way to compute 
+ Compare this to -0,7875 at parameter value of [-18.1437 10.1315 -9.3191 -7.8789
+ -1.5154 -7.3976] for the original way to compute projection 
 \begin_inset Float figure
 wide false
 sideways false
@@ -198,7 +232,8 @@ status open
 
 \begin_layout Plain Layout
 Optimization of coerrelation coefficient.
- Top - results of a single fminunm from initial position [0 0 0 0 0 0].
+ Top - results of a single fminunc run from initial position [0 0 0 0 0
+ 0].
  Bottom - results of iterative optimization with random perturbations after
  24 iterations.
 \begin_inset CommandInset label
@@ -212,10 +247,6 @@ name "fig:CC-optimization"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -260,8 +291,8 @@ Even after fixing the bug in MutualInformation.m fminunc didn't work very
 \end_layout
 
 \begin_layout Standard
-After 24 iterations of the algorithm with random perturbations of amplitude
- 0.1 MI has reached 2.3263 bits in position
+After 24 iterations of the algorithm with random perturbations MI has reached
+ 2.3263 bits in position
 \family roman
 \series medium
 \shape up
@@ -289,7 +320,7 @@ After 24 iterations of the algorithm with random perturbations of amplitude
  I believe that the main reason for this is that MI surface is more bumpy
  at least when it is far from optimum.
  that results may be improved by increasing the number of iterations.
- Additionaly altering the perturbation algorithm so that if after an iteration
+ Additionally altering the perturbation algorithm so that if after an iteration
  MI improves then the first perturbation is made in the direction of improvement
 , so that the algorithm has an 
 \begin_inset Quotes eld
@@ -308,10 +339,17 @@ holes
 \end_inset
 
 .
+ With this approach the highest MI (among 350 iterations) of 2.4194 bits
+ was obtained at position [-2.7984 -9.1847 -3.2821 -1.0277 -1.4127 -2.3684] which
+ is closer to the one obtained for CC.
+ This is included only to show that obtaining reasonably good registration
+ is possible with MI but with the discussed approach it takes much longer.
+ 
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
+placement h
 wide false
 sideways false
 status open
@@ -335,13 +373,32 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../inertia.eps
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
 Optimization of mutual information.
- Top - results of a single fminunm from initial position [0 0 0 0 0 0].
- Bottom - results of iterative optimization with random perturbations after
+ Top - results of a single fminunc run from initial position [0 0 0 0 0
+ 0].
+ Middle - results of iterative optimization with random perturbations after
  24 iterations.
+ Bottom - results of iterative optimization with 
+\begin_inset Quotes eld
+\end_inset
+
+inertia
+\begin_inset Quotes erd
+\end_inset
+
+ after 350 iterations.
  
 \begin_inset CommandInset label
 LatexCommand label
@@ -381,13 +438,35 @@ So CC registration indeed improved.
 \end_layout
 
 \begin_layout Standard
-Visual inspection shows that results of MI optimizations are poorer than
- those of CC.
- In particular the algorithm shift a lot 
+Comparing MI registration is not possible with current data as I didn't
+ allow the algorithm to run long enough when preparing the initial report.
+ Theoretically since (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:new"
+
+\end_inset
+
+) increases the number of states (contrast) where the integral (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:old"
+
+\end_inset
+
+) value is small registration could improve provided there is a lot of informati
+on in regions with low bone content (like in the spinous process of the
+ vertebra).
 \end_layout
 
 \begin_layout Section
 Extras
+\end_layout
+
+\begin_layout Standard
+I include results of each iteration of the algorithm with random perturbations
+ in the following tables.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -2424,7 +2503,7 @@ tz
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2433,7 +2512,7 @@ tz
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2442,7 +2521,7 @@ tz
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2451,7 +2530,7 @@ tz
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2460,7 +2539,7 @@ tz
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2469,7 +2548,7 @@ tz
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2478,7 +2557,7 @@ tz
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2487,7 +2566,7 @@ tz
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2496,7 +2575,7 @@ tz
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4644,39 +4723,6 @@ tz
 \end_inset
 
 
-\end_layout
-
-\begin_layout Section
-Notes
-\end_layout
-
-\begin_layout Subsection
-A bug in mutual information function
-\end_layout
-
-\begin_layout Standard
-I've found a bug which had to do with matlab function histc working only
- row-wise and that I used an ugly hack for speedup and made a mistake .
- This basically invalidates all MI calculations that have been done so far.
- This means that 
-\begin_inset Quotes eld
-\end_inset
-
-partial
-\begin_inset Quotes erd
-\end_inset
-
- graphs for MI have to be replaced in the original report.
-\end_layout
-
-\begin_layout Subsection
-Masking effects
-\end_layout
-
-\begin_layout Standard
-It would be interesting to see how mask affects registration.
- Basically now I do a mask that is a projection of a parallelogram containing
- ct.volume, but what if I do a different mask, that is oImage~=0?
 \end_layout
 
 \end_body

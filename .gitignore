@@ -220,3 +220,4 @@ pip-log.txt
 *.png
 report.pdf
 Assignment.zip
+*.lyx#
